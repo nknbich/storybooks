@@ -28,18 +28,6 @@ const m_SumDayToCloseRatio = Model.measure(`/gdc/md/${catalogJson.projectId}/obj
    .filters(filterProduct)
    ;
 
-const m_CloseBOPRatio = Model.measure(`/gdc/md/${catalogJson.projectId}/obj/9211`)
-   .localIdentifier('CloseBOPRatio')
-   .ratio()
-   .title('<button>Close[BOP] ratio</button>')
-   ;
-
-const m_CloseEOPRatio = Model.measure(`/gdc/md/${catalogJson.projectId}/obj/9203`)
-   .localIdentifier('CloseEOPRatio')
-   .ratio()
-   .title('<button>Close[EOP] ratio</button>')
-   ;
-
 const m_SumDayToClose = Model.measure(`/gdc/md/${catalogJson.projectId}/obj/1146`)
    .format('[>=100000][color=2190c0]█████ #,##0; [>=50000][color=2190c0]████░ #,##0; [>=30000][color=2190c0]███░░ #,##0; [>=20000][color=2190c0]██░░░ #,##0; [>=0][color=2190c0]█░░░░ #,##0; [=Null] No data;')
    .localIdentifier('SumDayToCloseNoRatio')
@@ -206,29 +194,19 @@ storiesOf('ComboChart/Column-Line', module)
             }}
         />
 
-        <h1>1PM,1SM,1VB, show in percent</h1>
-        <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[m_CloseBOPRatio]}
-            secondaryMeasures={[m_CloseEOPRatio]}
-            viewBy={catalog['Stage Name']}
-        />
-
-        <h1>1PM,1SM,1VB, show in percent combine stack to percent</h1>
-        <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[m_CloseBOPRatio]}
-            secondaryMeasures={[m_CloseEOPRatio]}
-            viewBy={catalog['Stage Name']}
-            config = {{
-                stackMeasuresToPercent: true
-            }}
-        />
-
         <h1>1PM,1SM,1VB, filter 1 value</h1>
         <ComboChart
             projectId={catalogJson.projectId}
             primaryMeasures={[catalog['Amount [BOP]']]}
+            secondaryMeasures={[m_MinAmount]}
+            viewBy={catalog['Department']}
+            filters = {[filterDepartment]}
+        />
+
+        <h1>2PM,1SM,1VB, filter 1 value</h1>
+        <ComboChart
+            projectId={catalogJson.projectId}
+            primaryMeasures={[catalog['Amount [BOP]'],catalog['Avg. Amount']]}
             secondaryMeasures={[m_MinAmount]}
             viewBy={catalog['Department']}
             filters = {[filterDepartment]}
@@ -240,26 +218,6 @@ storiesOf('ComboChart/Column-Line', module)
             primaryMeasures={[catalog['_Close [BOP]'], catalog['_Close [EOP]']]}
             secondaryMeasures={[catalog['_Snapshot [BOP]'],catalog['_Snapshot [EOP]']]}
             viewBy={yearClosed}
-        />
-
-        <h1>2PM,1SM,1VB, show in percent combine stack to percent</h1>
-        <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[m_CloseBOPRatio,catalog['_Close [BOP]']]}
-            secondaryMeasures={[m_CloseEOPRatio]}
-            viewBy={catalog['Stage Name']}
-            config = {{
-                stackMeasuresToPercent: true
-            }}
-        />
-
-        <h1>2PM,1SM,1VB, filter 1 value</h1>
-        <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['Amount [BOP]'],catalog['Avg. Amount']]}
-            secondaryMeasures={[m_MinAmount]}
-            viewBy={catalog['Department']}
-            filters = {[filterDepartment]}
         />
 
         <h1>2PM,2SM,1date, stack measures</h1>
