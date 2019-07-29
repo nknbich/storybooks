@@ -5,7 +5,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
 import { Visualization } from '@gooddata/react-components';
-
+import { Model } from '@gooddata/react-components';
 
 const demoProject = {
     'https://secure.gooddata.com': '',
