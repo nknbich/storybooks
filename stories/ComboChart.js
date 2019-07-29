@@ -4,14 +4,27 @@ import '@gooddata/react-components/styles/css/main.css';
 import { Visualization, ComboChart, HeaderPredicateFactory } from '@gooddata/react-components';
 import { Model } from '@gooddata/react-components';
 
-import catalogJson from '../src/data/catalog.json';
-import catalog from '../src/data/catalog';
 import { linearGradient } from 'polished';
+
+const demoProject = {
+    'https://secure.gooddata.com': '',
+    'https://staging3.intgdc.com': 'pbqw1946hsb7q22oqb1xuzma3s75kltx',
+    'https://staging2.intgdc.com': 'kia6t756e97f3usw9vbuhirjhuja158j',
+    'https://staging.intgdc.com': ''
+};
+const backendUrl = "https://staging3.intgdc.com"; // eslint-disable-line no-undef
+const demoProjectId = demoProject[backendUrl];
+if (!demoProjectId) {
+    console.error(`[fixtures.js] ProjectId for backend "${backendUrl}" is not in `, demoProject); // eslint-disable-line no-console
+}
+const backendUrlForInfo = backendUrl;
+const projectId = demoProjectId;
+
 const WRAPPER_STYLE = { width: 800, height: 400 };
 const DOWNLOADER_ID = 'downloader';
 
 const filterProduct = Model.positiveAttributeFilter('label.product.id.name',["Educationly","Explorer","CompuSci","PhoenixSoft","WonderKid"],true);
-const filterStageName = Model.negativeAttributeFilter(`/gdc/md/${catalogJson.projectId}/obj/1805`,[`/gdc/md/${catalogJson.projectId}/obj/1095/elements?id=966649`]);
+const filterStageName = Model.negativeAttributeFilter(`/gdc/md/${projectId}/obj/1805`,[`/gdc/md/${projectId}/obj/1095/elements?id=966649`]);
 const absoluteDate = Model.absoluteDateFilter('closed.dataset.dt','2010-01-01','2010-06-30');
 const relativeDate = Model.relativeDateFilter('closed.dataset.dt','GDC.time.year',-8,-8);
 const filterDepartment = Model.positiveAttributeFilter('label.owner.department',["Direct Sales"],true);
@@ -19,8 +32,12 @@ const relativeDateSnapshot = Model.relativeDateFilter('closed.dataset.dt','GDC.t
 
 const yearSnapshot = Model.attribute('snapshot.aag81lMifn6q');
 const yearClosed = Model.attribute('closed.aag81lMifn6q');
+const a_Product = Model.attribute(`/gdc/md/${projectId}/obj/952`).localIdentifier('ProductName');
+const a_StageName = Model.attribute(`/gdc/md/${projectId}/obj/1805`).localIdentifier('StageName');
+const a_Deparment = Model.attribute(`/gdc/md/${projectId}/obj/1027`).localIdentifier('Deparment');
+const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/969`).localIdentifier('Account');
 
-const m_SumDayToCloseRatio = Model.measure(`/gdc/md/${catalogJson.projectId}/obj/1146`)
+const m_SumDayToCloseRatio = Model.measure(`/gdc/md/${projectId}/obj/1146`)
    .localIdentifier('SumDayToClose')
    .ratio()
    .title('<button>Sum days to close</button>')
@@ -28,7 +45,7 @@ const m_SumDayToCloseRatio = Model.measure(`/gdc/md/${catalogJson.projectId}/obj
    .filters(filterProduct)
    ;
 
-const m_SumDayToClose = Model.measure(`/gdc/md/${catalogJson.projectId}/obj/1146`)
+const m_SumDayToClose = Model.measure(`/gdc/md/${projectId}/obj/1146`)
    .format('[>=100000][color=2190c0]█████ #,##0; [>=50000][color=2190c0]████░ #,##0; [>=30000][color=2190c0]███░░ #,##0; [>=20000][color=2190c0]██░░░ #,##0; [>=0][color=2190c0]█░░░░ #,##0; [=Null] No data;')
    .localIdentifier('SumDayToCloseNoRatio')
    .title('<button>Sum days to close</button>')
@@ -36,17 +53,17 @@ const m_SumDayToClose = Model.measure(`/gdc/md/${catalogJson.projectId}/obj/1146
    .filters(filterProduct)
    ;
 
-const m_MinAmount = Model.measure(`/gdc/md/${catalogJson.projectId}/obj/1144`)
+const m_MinAmount = Model.measure(`/gdc/md/${projectId}/obj/1144`)
    .localIdentifier('MinAmount')
    .title('<button>Min Amount</button>')
    .aggregation('min')
    ;
 
-const m_POPMeasure = Model.popMeasure('SumDayToCloseNoRatio', `/gdc/md/${catalogJson.projectId}/obj/323`)
+const m_POPMeasure = Model.popMeasure('SumDayToCloseNoRatio', `/gdc/md/${projectId}/obj/323`)
 .localIdentifier('POP_SumDayToClose')
 .alias('POP SumDayToClose');
 
-const m_PPMeasure = Model.previousPeriodMeasure('SumDayToCloseNoRatio', [{dataSet: `/gdc/md/${catalogJson.projectId}/obj/330`, periodsAgo: 1}])
+const m_PPMeasure = Model.previousPeriodMeasure('SumDayToCloseNoRatio', [{dataSet: `/gdc/md/${projectId}/obj/330`, periodsAgo: 1}])
 .localIdentifier('PP_SumDayToClose')
 .alias('PP SumDayToClose');
 
@@ -56,6 +73,18 @@ const m_ChangeAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'cha
 const m_DifferenceAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'difference');
 const m_RatioAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'ratio');
 const m_MultiplicationAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'multiplication');
+
+const m_ClosedEOP = Model.measure(`/gdc/md/${projectId}/obj/9203`);
+const m_ClosedBOP = Model.measure(`/gdc/md/${projectId}/obj/9211`);
+
+const m_SnapshotBOP = Model.measure(`/gdc/md/${projectId}/obj/2723`);
+const m_SnapshotEOP = Model.measure(`/gdc/md/${projectId}/obj/1275`);
+const m_SnapshotEOP1 = Model.measure(`/gdc/md/${projectId}/obj/10880`);
+const m_Amount = Model.measure(`/gdc/md/${projectId}/obj/1279`);
+const m_AmountBOP = Model.measure(`/gdc/md/${projectId}/obj/2858`);
+const m_AvgAmount = Model.measure(`/gdc/md/${projectId}/obj/62827`);
+const m_AvgWon = Model.measure(`/gdc/md/${projectId}/obj/1281`);
+
 
 let exportResult: any;
 
@@ -83,16 +112,16 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>Default chart type and drill by attribute value</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], catalog['_Close [EOP]'], m_SumDayToClose]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'], m_POPMeasure]}
-            viewBy={[catalog['Product'], catalog['Stage Name']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_ClosedEOP, m_SumDayToClose]}
+            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
+            viewBy={[a_Product, a_StageName]}
             config={{
                 //primaryChartType: 'column',
                 //secondaryChartType: 'line'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${catalogJson.projectId}/obj/949/elements?id=168279`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
              ]}
              onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
 			filters = {[filterProduct,filterStageName,relativeDate]}
@@ -101,16 +130,16 @@ storiesOf('ComboChart/Column-Line', module)
 		<button onClick={doExport}>Export</button>
         <h1>Drill by fact and show%</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
+            projectId={projectId}
             primaryMeasures={[m_SumDayToCloseRatio]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]']]}
-            viewBy={[catalog['Product'], catalog['Stage Name']]}
+            secondaryMeasures={[m_SnapshotBOP]}
+            viewBy={[a_Product, a_StageName]}
             config={{
                 primaryChartType: 'column',
                 //secondaryChartType: 'line'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${catalogJson.projectId}/obj/1146`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
                 ]}
                 onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             //filters = {[filterProduct,filterStageName,relativeDate]}
@@ -118,27 +147,39 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>Drill AM</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'], m_POPMeasure]}
-            viewBy={[catalog['Product'], catalog['Stage Name']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
+            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
+            viewBy={[a_Product, a_StageName]}
             config={{
                 //primaryChartType: 'column',
                 secondaryChartType: 'line'
             }}
             drillableItems={[
-                HeaderPredicateFactory.composedFromUri(`/gdc/md/${catalogJson.projectId}/obj/9211`),
+                HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
                 ]}
                 onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             filters = {[filterProduct,filterStageName,relativeDate]}
         />
-
+        <h1>duplicate Stack%</h1>
+        <ComboChart
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_SnapshotBOP, m_PPMeasure, m_SumDayToClose]}
+            secondaryMeasures={[m_RatioAM]}
+            viewBy={[a_Product, a_StageName]}
+            config={{
+                primaryChartType: 'column',
+                secondaryChartType: 'line',
+                stackMeasuresToPercent: true
+            }}
+            
+        />
         <h1>Stack%</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], catalog['_Snapshot [BOP]'], m_PPMeasure, m_SumDayToClose]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_SnapshotBOP, m_PPMeasure, m_SumDayToClose]}
             secondaryMeasures={[m_RatioAM]}
-            viewBy={[catalog['Product'], catalog['Stage Name']]}
+            viewBy={[a_Product, a_StageName]}
             config={{
                 primaryChartType: 'column',
                 secondaryChartType: 'line',
@@ -153,10 +194,10 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>stack measures</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], catalog['_Close [EOP]']]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'],catalog['_Snapshot [EOP]']]}
-            viewBy={catalog['Product']}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_ClosedEOP]}
+            secondaryMeasures={[m_SnapshotBOP,m_SnapshotEOP]}
+            viewBy={a_Product}
             config={{
                 //primaryChartType: 'column',
                 //secondaryChartType: 'line'
@@ -166,10 +207,10 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>dualAxis fasle</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['Amount [BOP]'], catalog['Avg. Amount']]}
-            secondaryMeasures={[m_MinAmount,catalog['Avg. Won']]}
-            viewBy={catalog['Stage Name']}
+            projectId={projectId}
+            primaryMeasures={[m_AmountBOP, m_AvgAmount]}
+            secondaryMeasures={[m_MinAmount,m_AvgWon]}
+            viewBy={a_StageName}
             config={{
                 stackMeasures: true,
                 dualAxis: false
@@ -178,17 +219,17 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>1PM,1SM,1VB</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['Amount [BOP]']]}
+            projectId={projectId}
+            primaryMeasures={[m_AmountBOP]}
             secondaryMeasures={[m_MinAmount]}
-            viewBy={catalog['Stage Name']}
+            viewBy={a_StageName}
         />
         <h1>1PM,1SM,1VB, stack to percent</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]']]}
-            secondaryMeasures={[catalog['_Close [EOP]']]}
-            viewBy={catalog['Stage Name']}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP]}
+            secondaryMeasures={[m_ClosedEOP]}
+            viewBy={a_StageName}
             config = {{
                 stackMeasuresToPercent: true
             }}
@@ -196,35 +237,35 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>1PM,1SM,1VB, filter 1 value</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['Amount [BOP]']]}
+            projectId={projectId}
+            primaryMeasures={[m_AmountBOP]}
             secondaryMeasures={[m_MinAmount]}
-            viewBy={catalog['Department']}
+            viewBy={a_Deparment}
             filters = {[filterDepartment]}
         />
 
         <h1>2PM,1SM,1VB, filter 1 value</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['Amount [BOP]'],catalog['Avg. Amount']]}
+            projectId={projectId}
+            primaryMeasures={[m_AmountBOP,m_AvgAmount]}
             secondaryMeasures={[m_MinAmount]}
-            viewBy={catalog['Department']}
+            viewBy={a_Deparment}
             filters = {[filterDepartment]}
         />
 
         <h1>2PM,2SM,1date</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], catalog['_Close [EOP]']]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'],catalog['_Snapshot [EOP]']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_ClosedEOP]}
+            secondaryMeasures={[m_SnapshotBOP,m_SnapshotEOP]}
             viewBy={yearClosed}
         />
 
         <h1>2PM,2SM,1date, stack measures</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], catalog['_Close [EOP]']]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'],catalog['_Snapshot [EOP]']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_ClosedEOP]}
+            secondaryMeasures={[m_SnapshotBOP,m_SnapshotEOP]}
             viewBy={yearClosed}
             config = {{
                 stackMeasures: true
@@ -234,9 +275,9 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>2PM,2SM,1date, stack to percent</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], catalog['_Close [EOP]']]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'],catalog['_Snapshot [EOP]']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_ClosedEOP]}
+            secondaryMeasures={[m_SnapshotBOP,m_SnapshotEOP]}
             viewBy={yearClosed}
             config = {{
                 stackMeasuresToPercent: true
@@ -246,9 +287,9 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>2PM,  2SM, 1 date, set min-max</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['Amount(1)'], catalog['Avg. Amount']]}
-            secondaryMeasures={[catalog['Avg. Won'], catalog['Amount [BOP]']]}
+            projectId={projectId}
+            primaryMeasures={[m_Amount, m_AvgAmount]}
+            secondaryMeasures={[m_AvgWon, m_AmountBOP]}
             viewBy={yearClosed}
             config={{
                 dataLabels: {
@@ -257,10 +298,12 @@ storiesOf('ComboChart/Column-Line', module)
                 secondary_yaxis: {
                     visible: true,
                     labelsEnabled: true,
+                    min: '800000',
                     rotation: "60"
                 },
                 yaxis: {
-                    rotation: "60"
+                    rotation: "60",
+                    min: '400000'
                 },
                 xaxis: {
                     visible: true,
@@ -276,18 +319,18 @@ storiesOf('ComboChart/Column-Line', module)
     <div style={WRAPPER_STYLE}>
         <h1>Column+column and drill eventing</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'], m_POPMeasure]}
-            viewBy={catalog['Product']}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
+            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
+            viewBy={a_Product}
             config={{
                 //primaryChartType: 'column',
                 secondaryChartType: 'column'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${catalogJson.projectId}/obj/949/elements?id=168279`),
-				HeaderPredicateFactory.composedFromUri(`/gdc/md/${catalogJson.projectId}/obj/9211`),
-				HeaderPredicateFactory.uriMatch(`/gdc/md/${catalogJson.projectId}/obj/1146`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
+				HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
+				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             filters = {[filterProduct,filterStageName,relativeDate]}
@@ -295,18 +338,18 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>Column+line and drill eventing</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'], m_POPMeasure]}
-            viewBy={catalog['Product']}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
+            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
+            viewBy={a_Product}
             config={{
                 //primaryChartType: 'column',
                 //secondaryChartType: 'line'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${catalogJson.projectId}/obj/949/elements?id=168279`),
-				HeaderPredicateFactory.composedFromUri(`/gdc/md/${catalogJson.projectId}/obj/9211`),
-				HeaderPredicateFactory.uriMatch(`/gdc/md/${catalogJson.projectId}/obj/1146`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
+				HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
+				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             filters = {[filterProduct,filterStageName,relativeDate]}
@@ -314,18 +357,18 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>Column+area and drill eventing</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'], m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]'], m_POPMeasure]}
-            viewBy={catalog['Product']}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
+            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
+            viewBy={a_Product}
             config={{
                 //primaryChartType: 'column',
                 secondaryChartType: 'area'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${catalogJson.projectId}/obj/949/elements?id=168279`),
-				HeaderPredicateFactory.composedFromUri(`/gdc/md/${catalogJson.projectId}/obj/9211`),
-				HeaderPredicateFactory.uriMatch(`/gdc/md/${catalogJson.projectId}/obj/1146`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
+				HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
+				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             filters = {[filterProduct,filterStageName,relativeDate]}
@@ -338,33 +381,33 @@ storiesOf('ComboChart/Column-Line', module)
     <div style={WRAPPER_STYLE}>
         <h1>Combo chart no data</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]']]}
-            secondaryMeasures={[catalog['_Snapshot [BOP]']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP]}
+            secondaryMeasures={[m_SnapshotBOP]}
             viewBy={yearSnapshot}           
             filters = {[relativeDateSnapshot]}
         />
 
         <h1>Combo chart too many data points to display</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]']]}
-            secondaryMeasures={[catalog['_Close [EOP]']]}
-            viewBy={catalog['Account']}            
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP]}
+            secondaryMeasures={[m_ClosedEOP]}
+            viewBy={a_Account}            
         />
 
         <h1>Combo chart only primary bucket</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]']]}
-            viewBy={catalog['Department']}            
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP]}
+            viewBy={a_Deparment}            
         />
 
         <h1>Combo chart column only primary bucket and stack measures</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'],catalog['_Close [EOP]'],catalog['_Snapshot']]}
-            viewBy={catalog['Stage Name']} 
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
+            viewBy={a_StageName} 
             config = {{
                 stackMeasures: true
             }
@@ -372,9 +415,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart line only primary bucket and stack measures</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'],catalog['_Close [EOP]'],catalog['_Snapshot']]}
-            viewBy={catalog['Stage Name']} 
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
+            viewBy={a_StageName} 
             config = {{
                 primaryChartType: 'line',
                 stackMeasures: true
@@ -383,9 +426,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart area only primary bucket and stack measures</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'],catalog['_Close [EOP]'],catalog['_Snapshot']]}
-            viewBy={catalog['Stage Name']} 
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
+            viewBy={a_StageName} 
             config = {{
                 primaryChartType: 'area',
                 stackMeasures: true
@@ -394,8 +437,8 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart column only primary bucket and stack to percent</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'],catalog['_Close [EOP]'],catalog['_Snapshot']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
             viewBy={yearClosed} 
             config = {{
                 stackMeasuresToPercent: true
@@ -404,8 +447,8 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart line only primary bucket and stack to percent</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'],catalog['_Close [EOP]'],catalog['_Snapshot']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
             viewBy={yearClosed} 
             config = {{
                 stackMeasuresToPercent: true,
@@ -415,8 +458,8 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart area only primary bucket and stack to percent</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            primaryMeasures={[catalog['_Close [BOP]'],catalog['_Close [EOP]'],catalog['_Snapshot']]}
+            projectId={projectId}
+            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
             viewBy={yearClosed} 
             config = {{
                 stackMeasuresToPercent: true,
@@ -426,21 +469,21 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart line only secondary bucket, 1 measure</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            secondaryMeasures={[catalog['_Close [EOP]']]}
-            viewBy={catalog['Stage Name']}            
+            projectId={projectId}
+            secondaryMeasures={[m_ClosedEOP]}
+            viewBy={a_StageName}            
         />
         <h1>Combo chart line only secondary bucket, some measures</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            secondaryMeasures={[catalog['_Close [EOP]'],catalog['_Close [BOP]']]}
-            viewBy={catalog['Stage Name']}            
+            projectId={projectId}
+            secondaryMeasures={[m_ClosedEOP,m_ClosedBOP]}
+            viewBy={a_StageName}            
         />
         <h1>Combo chart column only secondary bucket, some measures</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            secondaryMeasures={[catalog['_Close [EOP]'],catalog['_Close [BOP]']]}
-            viewBy={catalog['Stage Name']}   
+            projectId={projectId}
+            secondaryMeasures={[m_ClosedBOP,m_ClosedEOP]}
+            viewBy={a_StageName}   
             config = {{
                 secondaryChartType: 'column'
             }
@@ -448,9 +491,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart area only secondary bucket, some measures</h1>
         <ComboChart
-            projectId={catalogJson.projectId}
-            secondaryMeasures={[catalog['_Close [EOP]'],catalog['_Close [BOP]']]}
-            viewBy={catalog['Stage Name']}   
+            projectId={projectId}
+            secondaryMeasures={[m_ClosedBOP,m_ClosedEOP]}
+            viewBy={a_StageName}   
             config = {{
                 secondaryChartType: 'area'
             }
