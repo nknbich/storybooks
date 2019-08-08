@@ -2,7 +2,7 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
-import { ColumnChart } from '@gooddata/react-components';
+import { AreaChart } from '@gooddata/react-components';
 import { Model } from '@gooddata/react-components';
 
 const demoProject = {
@@ -37,29 +37,38 @@ const m_MinAmount = Model.measure(`/gdc/md/${projectId}/obj/1144`)
    .aggregation('min')
    ;
 
-storiesOf('Column Chart', module)
-    .add('Column single axis', () => (
+storiesOf('Area Chart', module)
+    .add('Area not stacked', () => (
     <div style={WRAPPER_STYLE}>
-        <h1>Column chart 1M,1VB, stack to percent</h1>
-        <ColumnChart
+        <h1>Area chart 1M,1VB, stack to percent</h1>
+        <AreaChart
             projectId={projectId}
             measures={[m_ClosedBOP]}
             viewBy={[a_Product]}
             config={{
-                stackMeasuresToPercent: true
+                //stackMeasuresToPercent: false
             }}
         />
-        <h1>Column chart 2M,1VB, stack measures</h1>
-        <ColumnChart
+        <h1>Area chart 2M,1VB, stack to percent</h1>
+        <AreaChart
+            projectId={projectId}
+            measures={[m_ClosedBOP, m_ClosedEOP]}
+            viewBy={[a_Product]}
+            config={{
+                //stackMeasuresToPercent: true
+            }}
+        />
+        <h1>Area chart 2M,2VB, stack to percent</h1>
+        <AreaChart
             projectId={projectId}
             measures={[m_ClosedBOP, m_ClosedEOP]}
             viewBy={[a_Product, a_StageName]}
             config={{
-                stackMeasures: true
+                stackMeasuresToPercent: true
             }}
         />
-        <h1>Column chart 2M,1VB, stack to percent, filter 1 value</h1>
-        <ColumnChart
+        <h1>Area chart 2M,1VB, stack to percent, filter 1 value</h1>
+        <AreaChart
             projectId={projectId}
             measures={[m_ClosedBOP, m_ClosedEOP]}
             viewBy={[yearClosed, a_Product]}
@@ -68,30 +77,14 @@ storiesOf('Column Chart', module)
             }}
             filters = {[relativeDateClosed, filterProduct]}
         />
-    </div>
-        
+    </div>    
     ))
-    .add('Column dual axis', () => (
+    .add('Stacked area', () => (
     <div style={WRAPPER_STYLE}>
-        <h1>Dual Column chart 1L,1R,1VB, stack measures</h1>
-        <ColumnChart
+        <h1>Area chart 2M,1VB, stack to percent, filter 1 value</h1>
+        <AreaChart
             projectId={projectId}
             measures={[m_ClosedBOP, m_MinAmount]}
-            viewBy={[yearClosed]}
-            config={{
-                dataLabels: {
-                    visible: true
-                },
-                stackMeasures: true,
-                secondary_yaxis: {
-                    measures: ['MinAmount']
-                }
-            }}
-        />
-        <h1>Dual Column chart 2L,1R,1VB, stack to percent</h1>
-        <ColumnChart
-            projectId={projectId}
-            measures={[m_ClosedBOP, m_ClosedEOP, m_MinAmount]}
             viewBy={[yearClosed]}
             config={{
                 dataLabels: {
@@ -104,5 +97,5 @@ storiesOf('Column Chart', module)
             }}
         />
     </div>
-        
+         
 ));
