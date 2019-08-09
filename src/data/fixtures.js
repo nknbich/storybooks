@@ -3,8 +3,8 @@ import { Model } from '@gooddata/react-components';
 const demoProject = {
     'https://secure.gooddata.com': '',
     'https://staging3.intgdc.com': 'pbqw1946hsb7q22oqb1xuzma3s75kltx',
-    'https://staging2.intgdc.com': 'kia6t756e97f3usw9vbuhirjhuja158j',
-    'https://staging.intgdc.com': ''
+    'https://staging2.intgdc.com': 'd8qmrg8qi02th0pdyxi0jg7ekrv9beqh',
+    'https://staging.intgdc.com': 'egbqln7774to906vx4pfo6ear7w0ifr3'
 };
 const backendUrl = "https://staging3.intgdc.com"; // eslint-disable-line no-undef
 const demoProjectId = demoProject[backendUrl];
@@ -63,11 +63,11 @@ const m_PP_SumDayToClose = Model.previousPeriodMeasure('SumDayToClose', [{dataSe
 .alias('PP SumDayToClose');
 
 //M1: _Closed [BOP], M2: _Snapshot [BOP]
-const m_Sum_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'sum');
-const m_ChangeAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'change');
-const m_DifferenceAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'difference');
-const m_Ratio_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'ratio');
-const m_MultiplicationAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'multiplication');
+const m_Sum_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'sum');
+const m_Change_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'change');
+const m_Difference_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'difference');
+const m_Ratio_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'ratio');
+const m_Multiplication_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'multiplication');
 
 const m_MinPaid = Model.measure('fact.persons.paid')
    .localIdentifier('MinPaid')
@@ -95,7 +95,7 @@ const m_CountStageHistoryRatio = Model.measure(`/gdc/md/${projectId}/obj/1174`)
     .ratio()
     .localIdentifier('CountStageHistoryWithRatio');
 const m_Amount = Model.measure(`/gdc/md/${projectId}/obj/1279`);
-const m_ClosedEOP = Model.measure(`/gdc/md/${projectId}/obj/9203`);
+const m_ClosedEOP = Model.measure(`/gdc/md/${projectId}/obj/9203`).localIdentifier('ClosedEOP');
 const m_ClosedBOP = Model.measure(`/gdc/md/${projectId}/obj/9211`).localIdentifier('ClosedBOP');
 const m_CountProduct = Model.measure(`/gdc/md/${projectId}/obj/949`)
    .localIdentifier('CountProduct')
@@ -106,14 +106,15 @@ const m_CountProduct = Model.measure(`/gdc/md/${projectId}/obj/949`)
    .localIdentifier('MinAmount')
    .title('<button>Min Amount</button>')
    .aggregation('min')
-   ;
-   const m_SnapshotBOP = Model.measure(`/gdc/md/${projectId}/obj/2723`).localIdentifier('SnapshotBOP');
+   ; 
+const m_SnapshotBOP = Model.measure(`/gdc/md/${projectId}/obj/2723`).localIdentifier('SnapshotBOP');
 
    const m_AmountBOP = Model.measure(`/gdc/md/${projectId}/obj/2858`);
    const m_AvgAmount = Model.measure(`/gdc/md/${projectId}/obj/62827`);
    const m_AvgWon = Model.measure(`/gdc/md/${projectId}/obj/1281`);
 
-const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/969`)
+const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/969`);
+const a_Activity = Model.attribute(`/gdc/md/${projectId}/obj/1254`);
 const a_Product = Model.attribute('label.product.id.name').localIdentifier('ProductName');
 const a_StageName = Model.attribute('label.stage.name.stagename').localIdentifier('StageName');
 const a_Department = Model.attribute('label.owner.department').localIdentifier('Department');
@@ -148,9 +149,9 @@ export default {
     m_AvgWon,
     m_SumDayToCloseRatio,
     m_SumDayToClose,
-    m_ChangeAM,
-    m_DifferenceAM,
-    m_MultiplicationAM,
+    m_Change_ClosedBOP_SnapshotBOP,
+    m_Difference_ClosedBOP_SnapshotBOP,
+    m_Multiplication_ClosedBOP_SnapshotBOP,
     m_POP_SumDayToClose,
     m_PP_SumDayToClose,
     m_Ratio_ClosedBOP_SnapshotBOP,
@@ -171,6 +172,7 @@ export default {
     m_CountProduct,
     m_MinAmount,
     a_Account,
+    a_Activity,
     a_Address,
     a_Department,
     a_FirstName,
