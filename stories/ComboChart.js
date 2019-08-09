@@ -2,97 +2,10 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
 import { Visualization, ComboChart, HeaderPredicateFactory } from '@gooddata/react-components';
-import { Model } from '@gooddata/react-components';
-
-import { linearGradient } from 'polished';
-
-const demoProject = {
-    'https://secure.gooddata.com': '',
-    'https://staging3.intgdc.com': 'pbqw1946hsb7q22oqb1xuzma3s75kltx',
-    'https://staging2.intgdc.com': 'kia6t756e97f3usw9vbuhirjhuja158j',
-    'https://staging.intgdc.com': ''
-};
-const backendUrl = "https://staging3.intgdc.com"; // eslint-disable-line no-undef
-const demoProjectId = demoProject[backendUrl];
-if (!demoProjectId) {
-    console.error(`[fixtures.js] ProjectId for backend "${backendUrl}" is not in `, demoProject); // eslint-disable-line no-console
-}
-const backendUrlForInfo = backendUrl;
-const projectId = demoProjectId;
 
 const WRAPPER_STYLE = { width: 800, height: 400 };
 const DOWNLOADER_ID = 'downloader';
-
-const filterProduct = Model.positiveAttributeFilter('label.product.id.name',["Educationly","Explorer","CompuSci","PhoenixSoft","WonderKid"],true);
-const filterStageName = Model.negativeAttributeFilter(`/gdc/md/${projectId}/obj/1805`,[`/gdc/md/${projectId}/obj/1095/elements?id=966649`]);
-const absoluteDate = Model.absoluteDateFilter('closed.dataset.dt','2010-01-01','2010-06-30');
-const relativeDateClosed = Model.relativeDateFilter('closed.dataset.dt','GDC.time.year',-8,-8);
-const filterDepartment = Model.positiveAttributeFilter('label.owner.department',["Direct Sales"],true);
-const relativeDateSnapshot = Model.relativeDateFilter('snapshot.dataset.dt','GDC.time.year',-1,-1);
-
-const yearSnapshot = Model.attribute('snapshot.aag81lMifn6q');
-const yearClosed = Model.attribute('closed.aag81lMifn6q');
-const a_Product = Model.attribute(`/gdc/md/${projectId}/obj/952`).localIdentifier('ProductName');
-const a_StageName = Model.attribute(`/gdc/md/${projectId}/obj/1805`).localIdentifier('StageName');
-const a_Deparment = Model.attribute(`/gdc/md/${projectId}/obj/1027`).localIdentifier('Deparment');
-const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/970`).localIdentifier('Account');
-
-const m_CountProduct = Model.measure(`/gdc/md/${projectId}/obj/949`)
-   .localIdentifier('CountProduct')
-   .title('<button>Count Product</button>')
-   .aggregation('count')
-   ;
-
-const m_SumDayToCloseRatio = Model.measure(`/gdc/md/${projectId}/obj/1146`)
-   .localIdentifier('SumDayToClose')
-   .ratio()
-   .title('<button>Sum days to close</button>')
-   .aggregation('sum')
-   .filters(filterProduct)
-   ;
-
-const m_SumDayToClose = Model.measure(`/gdc/md/${projectId}/obj/1146`)
-   .format('[>=100000][color=2190c0]█████ #,##0; [>=50000][color=2190c0]████░ #,##0; [>=30000][color=2190c0]███░░ #,##0; [>=20000][color=2190c0]██░░░ #,##0; [>=0][color=2190c0]█░░░░ #,##0; [=Null] No data;')
-   .localIdentifier('SumDayToCloseNoRatio')
-   .title('<button>Sum days to close</button>')
-   .aggregation('sum')
-   .filters(filterProduct)
-   ;
-
-const m_MinAmount = Model.measure(`/gdc/md/${projectId}/obj/1144`)
-   .localIdentifier('MinAmount')
-   .title('<button>Min Amount</button>')
-   .aggregation('min')
-   ;
-
-const m_POPMeasure = Model.popMeasure('SumDayToCloseNoRatio', `/gdc/md/${projectId}/obj/323`)
-.localIdentifier('POP_SumDayToClose')
-.alias('POP SumDayToClose');
-
-const m_PPMeasure = Model.previousPeriodMeasure('SumDayToCloseNoRatio', [{dataSet: `/gdc/md/${projectId}/obj/330`, periodsAgo: 1}])
-.localIdentifier('PP_SumDayToClose')
-.alias('PP SumDayToClose');
-
-
-//M1: _Closed [BOP], M2: _Snapshot [BOP]
-const m_SumAM = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'sum');
-
-const m_ChangeAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'change');
-const m_DifferenceAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'difference');
-const m_RatioAM = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'ratio');
-const m_MultiplicationAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'multiplication');
-
-const m_ClosedEOP = Model.measure(`/gdc/md/${projectId}/obj/9203`);
-const m_ClosedBOP = Model.measure(`/gdc/md/${projectId}/obj/9211`).localIdentifier('ClosedBOP');
-
-const m_SnapshotBOP = Model.measure(`/gdc/md/${projectId}/obj/2723`).localIdentifier('SnapshotBOP');
-const m_SnapshotEOP = Model.measure(`/gdc/md/${projectId}/obj/1275`);
-const m_SnapshotEOP1 = Model.measure(`/gdc/md/${projectId}/obj/10880`);
-const m_Amount = Model.measure(`/gdc/md/${projectId}/obj/1279`);
-const m_AmountBOP = Model.measure(`/gdc/md/${projectId}/obj/2858`);
-const m_AvgAmount = Model.measure(`/gdc/md/${projectId}/obj/62827`);
-const m_AvgWon = Model.measure(`/gdc/md/${projectId}/obj/1281`);
-
+import fixtures from '../src/data/fixtures';
 
 let exportResult: any;
 
@@ -120,62 +33,62 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>Default chart type and drill by attribute value</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_ClosedEOP, m_SumDayToClose]}
-            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
-            viewBy={[a_Product, a_StageName]}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_ClosedEOP, fixtures.m_SumDayToClose]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP, fixtures.m_POP_SumDayToClose]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
             config={{
                 //primaryChartType: 'column',
                 //secondaryChartType: 'line'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/949/elements?id=168279`),
              ]}
              onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-			filters = {[filterProduct,filterStageName,relativeDateClosed]}
+			filters = {[fixtures.filterProduct,fixtures.filterStageName,fixtures.relativeDateYear]}
 			onExportReady = {onExportReady}
         />
 		<button onClick={doExport}>Export</button>
         <h1>Drill by fact and show%</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_SumDayToCloseRatio]}
-            secondaryMeasures={[m_SnapshotBOP]}
-            viewBy={[a_Product, a_StageName]}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_SumDayToCloseRatio]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
             config={{
                 primaryChartType: 'column',
                 //secondaryChartType: 'line'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1146`),
                 ]}
                 onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            //filters = {[filterProduct,filterStageName,relativeDate]}
+            //filters = {[filterProduct,fixtures.filterStageName,relativeDate]}
         />
 
         <h1>Drill AM</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[m_SnapshotBOP]}
-            viewBy={[a_Product, a_StageName]}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_Sum_ClosedBOP_SnapshotBOP, fixtures.m_SumDayToClose]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
             config={{
                 //primaryChartType: 'column',
                 secondaryChartType: 'line'
             }}
             drillableItems={[
-                HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
+                HeaderPredicateFactory.composedFromUri(`/gdc/md/${fixtures.projectId}/obj/9211`),
                 ]}
                 onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            filters = {[filterProduct,filterStageName,relativeDateClosed]}
+            filters = {[fixtures.filterProduct,fixtures.filterStageName,fixtures.relativeDateYear]}
         />
         
         <h1>Stack%</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_SnapshotBOP, m_PPMeasure, m_SumDayToClose]}
-            secondaryMeasures={[m_RatioAM]}
-            viewBy={[a_Product, a_StageName]}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_SnapshotBOP, fixtures.m_PP_SumDayToClose, fixtures.m_SumDayToClose]}
+            secondaryMeasures={[fixtures.m_Ratio_ClosedBOP_SnapshotBOP]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
             config={{
                 primaryChartType: 'column',
                 secondaryChartType: 'line',
@@ -184,16 +97,16 @@ storiesOf('ComboChart/Column-Line', module)
             drillableItems={[
                 HeaderPredicateFactory.identifierMatch('aaeb7jTCfexV'),
                 ]}
-            filters = {[filterProduct,filterStageName,relativeDateClosed]}
+            filters = {[fixtures.filterProduct,fixtures.filterStageName,fixtures.relativeDateYear]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
         />
 
         <h1>stack measures</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_ClosedEOP]}
-            secondaryMeasures={[m_SnapshotBOP,m_SnapshotEOP]}
-            viewBy={a_Product}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_ClosedEOP]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP,fixtures.m_SnapshotEOP]}
+            viewBy={fixtures.a_Product}
             config={{
                 //primaryChartType: 'column',
                 //secondaryChartType: 'line'
@@ -203,10 +116,10 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>dualAxis fasle</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_AmountBOP, m_AvgAmount]}
-            secondaryMeasures={[m_MinAmount,m_AvgWon]}
-            viewBy={a_StageName}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_AmountBOP, fixtures.m_AvgAmount]}
+            secondaryMeasures={[fixtures.m_MinAmount,fixtures.m_AvgWon]}
+            viewBy={fixtures.a_StageName}
             config={{
                 stackMeasures: true,
                 dualAxis: false
@@ -215,17 +128,17 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>1PM,1SM,1VB</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_AmountBOP]}
-            secondaryMeasures={[m_MinAmount]}
-            viewBy={a_StageName}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_AmountBOP]}
+            secondaryMeasures={[fixtures.m_MinAmount]}
+            viewBy={fixtures.a_StageName}
         />
         <h1>1PM,1SM,1VB, stack to percent</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP]}
-            secondaryMeasures={[m_ClosedEOP]}
-            viewBy={a_StageName}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP]}
+            secondaryMeasures={[fixtures.m_ClosedEOP]}
+            viewBy={fixtures.a_StageName}
             config = {{
                 stackMeasuresToPercent: true
             }}
@@ -233,36 +146,36 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>1PM,1SM,1VB, filter 1 value</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_AmountBOP]}
-            secondaryMeasures={[m_MinAmount]}
-            viewBy={a_Deparment}
-            filters = {[filterDepartment]}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_AmountBOP]}
+            secondaryMeasures={[fixtures.m_MinAmount]}
+            viewBy={fixtures.a_Deparment}
+            filters = {[fixtures.filterDepartment]}
         />
 
         <h1>2PM,1SM,1VB, filter 1 value</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_AmountBOP,m_AvgAmount]}
-            secondaryMeasures={[m_MinAmount]}
-            viewBy={a_Deparment}
-            filters = {[filterDepartment]}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_AmountBOP,fixtures.m_AvgAmount]}
+            secondaryMeasures={[fixtures.m_MinAmount]}
+            viewBy={fixtures.a_Deparment}
+            filters = {[fixtures.filterDepartment]}
         />
 
         <h1>2PM,2SM,1date</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_ClosedEOP]}
-            secondaryMeasures={[m_SnapshotBOP,m_SnapshotEOP]}
-            viewBy={yearClosed}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_ClosedEOP]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP,fixtures.m_SnapshotEOP]}
+            viewBy={fixtures.a_YearClosed}
         />
 
         <h1>2PM,2SM,1date, stack measures</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_ClosedEOP]}
-            secondaryMeasures={[m_SnapshotBOP,m_SnapshotEOP]}
-            viewBy={yearClosed}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_ClosedEOP]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP,fixtures.m_SnapshotEOP]}
+            viewBy={fixtures.a_YearClosed}
             config = {{
                 stackMeasures: true
             }
@@ -271,10 +184,10 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>2PM,2SM,1date, stack to percent</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_ClosedEOP]}
-            secondaryMeasures={[m_SnapshotBOP,m_SnapshotEOP]}
-            viewBy={yearClosed}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_ClosedEOP]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP,fixtures.m_SnapshotEOP]}
+            viewBy={fixtures.a_YearClosed}
             config = {{
                 stackMeasuresToPercent: true
             }
@@ -283,10 +196,10 @@ storiesOf('ComboChart/Column-Line', module)
 
         <h1>2PM,  2SM, 1 date, set min-max</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_Amount, m_AvgAmount]}
-            secondaryMeasures={[m_AvgWon, m_AmountBOP]}
-            viewBy={yearClosed}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_Amount, fixtures.m_AvgAmount]}
+            secondaryMeasures={[fixtures.m_AvgWon, fixtures.m_AmountBOP]}
+            viewBy={fixtures.a_YearClosed}
             config={{
                 dataLabels: {
                     visible: true
@@ -315,59 +228,59 @@ storiesOf('ComboChart/Column-Line', module)
     <div style={WRAPPER_STYLE}>
         <h1>Column+column and drill eventing</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
-            viewBy={a_Product}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_Sum_ClosedBOP_SnapshotBOP, fixtures.m_SumDayToClose]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP, fixtures.m_POP_SumDayToClose]}
+            viewBy={fixtures.a_Product}
             config={{
                 //primaryChartType: 'column',
                 secondaryChartType: 'column'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
-				HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
-				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/949/elements?id=168279`),
+				HeaderPredicateFactory.composedFromUri(`/gdc/md/${fixtures.projectId}/obj/9211`),
+				HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            filters = {[filterProduct,filterStageName,relativeDateClosed]}
+            filters = {[fixtures.filterProduct,fixtures.filterStageName,fixtures.relativeDateYear]}
         />
 
         <h1>Column+line and drill eventing</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
-            viewBy={a_Product}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_Sum_ClosedBOP_SnapshotBOP, fixtures.m_SumDayToClose]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP, fixtures.m_POP_SumDayToClose]}
+            viewBy={fixtures.a_Product}
             config={{
                 //primaryChartType: 'column',
                 //secondaryChartType: 'line'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
-				HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
-				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/949/elements?id=168279`),
+				HeaderPredicateFactory.composedFromUri(`/gdc/md/${fixtures.projectId}/obj/9211`),
+				HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            filters = {[filterProduct,filterStageName,relativeDateClosed]}
+            filters = {[fixtures.filterProduct,fixtures.filterStageName,fixtures.relativeDateYear]}
         />
 
         <h1>Column+area and drill eventing</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
-            viewBy={a_Product}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_Sum_ClosedBOP_SnapshotBOP, fixtures.m_SumDayToClose]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP, fixtures.m_POP_SumDayToClose]}
+            viewBy={fixtures.a_Product}
             config={{
                 //primaryChartType: 'column',
                 secondaryChartType: 'area'
             }}
             drillableItems={[
-                HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
-				HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
-				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/949/elements?id=168279`),
+				HeaderPredicateFactory.composedFromUri(`/gdc/md/${fixtures.projectId}/obj/9211`),
+				HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            filters = {[filterProduct,filterStageName,relativeDateClosed]}
+            filters = {[fixtures.filterProduct,fixtures.filterStageName,fixtures.relativeDateYear]}
         />
 
     </div>
@@ -377,33 +290,33 @@ storiesOf('ComboChart/Column-Line', module)
     <div style={WRAPPER_STYLE}>
         <h1>Combo chart no data</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP]}
-            secondaryMeasures={[m_SnapshotBOP]}
-            viewBy={yearSnapshot}           
-            filters = {[relativeDateSnapshot]}
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP]}
+            secondaryMeasures={[fixtures.m_SnapshotBOP]}
+            viewBy={fixtures.a_YearSnapshot}           
+            filters = {[fixtures.relativeDateYearSnapshot]}
         />
 
         <h1>Combo chart too many data points to display</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP]}
-            secondaryMeasures={[m_ClosedEOP]}
-            viewBy={a_Account}            
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP]}
+            secondaryMeasures={[fixtures.m_ClosedEOP]}
+            viewBy={fixtures.a_Account}            
         />
 
         <h1>Combo chart only primary bucket</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP]}
-            viewBy={a_Deparment}            
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP]}
+            viewBy={fixtures.a_Deparment}            
         />
 
         <h1>Combo chart column only primary bucket and stack measures</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
-            viewBy={a_StageName} 
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP,fixtures.m_SnapshotBOP]}
+            viewBy={fixtures.a_StageName} 
             config = {{
                 stackMeasures: true
             }
@@ -411,9 +324,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart line only primary bucket and stack measures</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
-            viewBy={a_StageName} 
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP,fixtures.m_SnapshotBOP]}
+            viewBy={fixtures.a_StageName} 
             config = {{
                 primaryChartType: 'line',
                 stackMeasures: true
@@ -422,9 +335,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart area only primary bucket and stack measures</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
-            viewBy={a_StageName} 
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP,fixtures.m_SnapshotBOP]}
+            viewBy={fixtures.a_StageName} 
             config = {{
                 primaryChartType: 'area',
                 stackMeasures: true
@@ -433,9 +346,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart column only primary bucket and stack to percent</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
-            viewBy={yearClosed} 
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP,fixtures.m_SnapshotBOP]}
+            viewBy={fixtures.a_YearClosed} 
             config = {{
                 stackMeasuresToPercent: true
             }
@@ -443,9 +356,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart line only primary bucket and stack to percent</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
-            viewBy={yearClosed} 
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP,fixtures.m_SnapshotBOP]}
+            viewBy={fixtures.a_YearClosed} 
             config = {{
                 stackMeasuresToPercent: true,
                 primaryChartType: 'line'
@@ -454,9 +367,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart area only primary bucket and stack to percent</h1>
         <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP,m_ClosedEOP,m_SnapshotBOP]}
-            viewBy={yearClosed} 
+            projectId={fixtures.projectId}
+            primaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP,fixtures.m_SnapshotBOP]}
+            viewBy={fixtures.a_YearClosed} 
             config = {{
                 stackMeasuresToPercent: true,
                 primaryChartType: 'area'
@@ -465,21 +378,21 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart line only secondary bucket, 1 measure</h1>
         <ComboChart
-            projectId={projectId}
-            secondaryMeasures={[m_ClosedEOP]}
-            viewBy={a_StageName}            
+            projectId={fixtures.projectId}
+            secondaryMeasures={[fixtures.m_ClosedEOP]}
+            viewBy={fixtures.a_StageName}            
         />
         <h1>Combo chart line only secondary bucket, some measures</h1>
         <ComboChart
-            projectId={projectId}
-            secondaryMeasures={[m_ClosedEOP,m_ClosedBOP]}
-            viewBy={a_StageName}            
+            projectId={fixtures.projectId}
+            secondaryMeasures={[fixtures.m_ClosedEOP,fixtures.m_ClosedBOP]}
+            viewBy={fixtures.a_StageName}            
         />
         <h1>Combo chart column only secondary bucket, some measures</h1>
         <ComboChart
-            projectId={projectId}
-            secondaryMeasures={[m_ClosedBOP,m_ClosedEOP]}
-            viewBy={a_StageName}   
+            projectId={fixtures.projectId}
+            secondaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP]}
+            viewBy={fixtures.a_StageName}   
             config = {{
                 secondaryChartType: 'column'
             }
@@ -487,9 +400,9 @@ storiesOf('ComboChart/Column-Line', module)
         />
         <h1>Combo chart area only secondary bucket, some measures</h1>
         <ComboChart
-            projectId={projectId}
-            secondaryMeasures={[m_ClosedBOP,m_ClosedEOP]}
-            viewBy={a_StageName}   
+            projectId={fixtures.projectId}
+            secondaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP]}
+            viewBy={fixtures.a_StageName}   
             config = {{
                 secondaryChartType: 'area'
             }

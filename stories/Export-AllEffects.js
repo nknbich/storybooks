@@ -6,7 +6,6 @@ import { Model } from '@gooddata/react-components';
 
 import catalogJson from '../src/data/catalog.json';
 import catalog from '../src/data/catalog';
-import { isEmpty } from 'rxjs/operator/isEmpty';
 const WRAPPER_STYLE = { width: 800, height: 400 };
 const DOWNLOADER_ID = 'downloader';
 
