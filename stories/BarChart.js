@@ -2,7 +2,7 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
-import { ColumnChart } from '@gooddata/react-components';
+import { BarChart } from '@gooddata/react-components';
 import { Model } from '@gooddata/react-components';
 
 const demoProject = {
@@ -37,29 +37,35 @@ const m_MinAmount = Model.measure(`/gdc/md/${projectId}/obj/1144`)
    .aggregation('min')
    ;
 
-storiesOf('Column Chart', module)
-    .add('Column single axis', () => (
-    <div style={WRAPPER_STYLE}>
-        <h1>Column chart 1M,1VB, stack to percent</h1>
-        <ColumnChart
+const m_AvgAmount = Model.measure(`/gdc/md/${projectId}/obj/1144`)
+   .localIdentifier('MinAmount')
+   .title('<button>Min Amount</button>')
+   .aggregation('avg')
+   ;
+
+storiesOf('Bar Chart', module)
+    .add('Bar single axis', () => (
+        <div style={WRAPPER_STYLE}>
+        <h1>Bar chart 1M,1VB, stack measures</h1>
+        <BarChart
             projectId={projectId}
             measures={[m_ClosedBOP]}
             viewBy={[a_Product]}
             config={{
-                stackMeasuresToPercent: true
+                stackMeasures: true
             }}
         />
-        <h1>Column chart 2M,1VB, stack measures</h1>
-        <ColumnChart
+        <h1>Bar chart 2M,1VB, stack to percent</h1>
+        <BarChart
             projectId={projectId}
             measures={[m_ClosedBOP, m_ClosedEOP]}
             viewBy={[a_Product, a_StageName]}
             config={{
-                stackMeasures: true
+                stackMeasuresToPercent: true
             }}
         />
-        <h1>Column chart 2M,1VB, stack to percent, filter 1 value</h1>
-        <ColumnChart
+        <h1>Bar chart 2M,1VB, stack to percent, filter 1 value</h1>
+        <BarChart
             projectId={projectId}
             measures={[m_ClosedBOP, m_ClosedEOP]}
             viewBy={[yearClosed, a_Product]}
@@ -71,10 +77,10 @@ storiesOf('Column Chart', module)
     </div>
         
     ))
-    .add('Column dual axis', () => (
-    <div style={WRAPPER_STYLE}>
-        <h1>Dual Column chart 1L,1R,1VB, stack measures</h1>
-        <ColumnChart
+    .add('Bar dual axis', () => (
+        <div style={WRAPPER_STYLE}>
+        <h1>Dual Bar chart 1T,1B,1VB, stack measures</h1>
+        <BarChart
             projectId={projectId}
             measures={[m_ClosedBOP, m_MinAmount]}
             viewBy={[yearClosed]}
@@ -88,8 +94,8 @@ storiesOf('Column Chart', module)
                 }
             }}
         />
-        <h1>Dual Column chart 2L,1R,1VB, stack to percent</h1>
-        <ColumnChart
+        <h1>Bar chart 2T,1B,1VB, stack to percent</h1>
+        <BarChart
             projectId={projectId}
             measures={[m_ClosedBOP, m_ClosedEOP, m_MinAmount]}
             viewBy={[yearClosed]}
@@ -103,6 +109,6 @@ storiesOf('Column Chart', module)
                 }
             }}
         />
-    </div>
+        </div>
         
-));
+    ));

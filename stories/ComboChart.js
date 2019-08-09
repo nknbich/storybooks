@@ -26,16 +26,22 @@ const DOWNLOADER_ID = 'downloader';
 const filterProduct = Model.positiveAttributeFilter('label.product.id.name',["Educationly","Explorer","CompuSci","PhoenixSoft","WonderKid"],true);
 const filterStageName = Model.negativeAttributeFilter(`/gdc/md/${projectId}/obj/1805`,[`/gdc/md/${projectId}/obj/1095/elements?id=966649`]);
 const absoluteDate = Model.absoluteDateFilter('closed.dataset.dt','2010-01-01','2010-06-30');
-const relativeDate = Model.relativeDateFilter('closed.dataset.dt','GDC.time.year',-8,-8);
+const relativeDateClosed = Model.relativeDateFilter('closed.dataset.dt','GDC.time.year',-8,-8);
 const filterDepartment = Model.positiveAttributeFilter('label.owner.department',["Direct Sales"],true);
-const relativeDateSnapshot = Model.relativeDateFilter('closed.dataset.dt','GDC.time.year',-1,-1);
+const relativeDateSnapshot = Model.relativeDateFilter('snapshot.dataset.dt','GDC.time.year',-1,-1);
 
 const yearSnapshot = Model.attribute('snapshot.aag81lMifn6q');
 const yearClosed = Model.attribute('closed.aag81lMifn6q');
 const a_Product = Model.attribute(`/gdc/md/${projectId}/obj/952`).localIdentifier('ProductName');
 const a_StageName = Model.attribute(`/gdc/md/${projectId}/obj/1805`).localIdentifier('StageName');
 const a_Deparment = Model.attribute(`/gdc/md/${projectId}/obj/1027`).localIdentifier('Deparment');
-const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/969`).localIdentifier('Account');
+const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/970`).localIdentifier('Account');
+
+const m_CountProduct = Model.measure(`/gdc/md/${projectId}/obj/949`)
+   .localIdentifier('CountProduct')
+   .title('<button>Count Product</button>')
+   .aggregation('count')
+   ;
 
 const m_SumDayToCloseRatio = Model.measure(`/gdc/md/${projectId}/obj/1146`)
    .localIdentifier('SumDayToClose')
@@ -67,17 +73,19 @@ const m_PPMeasure = Model.previousPeriodMeasure('SumDayToCloseNoRatio', [{dataSe
 .localIdentifier('PP_SumDayToClose')
 .alias('PP SumDayToClose');
 
+
 //M1: _Closed [BOP], M2: _Snapshot [BOP]
-const m_SumAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'sum');
+const m_SumAM = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'sum');
+
 const m_ChangeAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'change');
 const m_DifferenceAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'difference');
-const m_RatioAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'ratio');
+const m_RatioAM = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'ratio');
 const m_MultiplicationAM = Model.arithmeticMeasure(['aaeb7jTCfexV', 'aazV2yX2gz2z'],'multiplication');
 
 const m_ClosedEOP = Model.measure(`/gdc/md/${projectId}/obj/9203`);
-const m_ClosedBOP = Model.measure(`/gdc/md/${projectId}/obj/9211`);
+const m_ClosedBOP = Model.measure(`/gdc/md/${projectId}/obj/9211`).localIdentifier('ClosedBOP');
 
-const m_SnapshotBOP = Model.measure(`/gdc/md/${projectId}/obj/2723`);
+const m_SnapshotBOP = Model.measure(`/gdc/md/${projectId}/obj/2723`).localIdentifier('SnapshotBOP');
 const m_SnapshotEOP = Model.measure(`/gdc/md/${projectId}/obj/1275`);
 const m_SnapshotEOP1 = Model.measure(`/gdc/md/${projectId}/obj/10880`);
 const m_Amount = Model.measure(`/gdc/md/${projectId}/obj/1279`);
@@ -124,7 +132,7 @@ storiesOf('ComboChart/Column-Line', module)
                 HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/949/elements?id=168279`),
              ]}
              onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-			filters = {[filterProduct,filterStageName,relativeDate]}
+			filters = {[filterProduct,filterStageName,relativeDateClosed]}
 			onExportReady = {onExportReady}
         />
 		<button onClick={doExport}>Export</button>
@@ -149,7 +157,7 @@ storiesOf('ComboChart/Column-Line', module)
         <ComboChart
             projectId={projectId}
             primaryMeasures={[m_ClosedBOP, m_SumAM, m_SumDayToClose]}
-            secondaryMeasures={[m_SnapshotBOP, m_POPMeasure]}
+            secondaryMeasures={[m_SnapshotBOP]}
             viewBy={[a_Product, a_StageName]}
             config={{
                 //primaryChartType: 'column',
@@ -159,21 +167,9 @@ storiesOf('ComboChart/Column-Line', module)
                 HeaderPredicateFactory.composedFromUri(`/gdc/md/${projectId}/obj/9211`),
                 ]}
                 onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            filters = {[filterProduct,filterStageName,relativeDate]}
+            filters = {[filterProduct,filterStageName,relativeDateClosed]}
         />
-        <h1>duplicate Stack%</h1>
-        <ComboChart
-            projectId={projectId}
-            primaryMeasures={[m_ClosedBOP, m_SnapshotBOP, m_PPMeasure, m_SumDayToClose]}
-            secondaryMeasures={[m_RatioAM]}
-            viewBy={[a_Product, a_StageName]}
-            config={{
-                primaryChartType: 'column',
-                secondaryChartType: 'line',
-                stackMeasuresToPercent: true
-            }}
-            
-        />
+        
         <h1>Stack%</h1>
         <ComboChart
             projectId={projectId}
@@ -188,7 +184,7 @@ storiesOf('ComboChart/Column-Line', module)
             drillableItems={[
                 HeaderPredicateFactory.identifierMatch('aaeb7jTCfexV'),
                 ]}
-            filters = {[filterProduct,filterStageName,relativeDate]}
+            filters = {[filterProduct,filterStageName,relativeDateClosed]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
         />
 
@@ -333,7 +329,7 @@ storiesOf('ComboChart/Column-Line', module)
 				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            filters = {[filterProduct,filterStageName,relativeDate]}
+            filters = {[filterProduct,filterStageName,relativeDateClosed]}
         />
 
         <h1>Column+line and drill eventing</h1>
@@ -352,7 +348,7 @@ storiesOf('ComboChart/Column-Line', module)
 				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            filters = {[filterProduct,filterStageName,relativeDate]}
+            filters = {[filterProduct,filterStageName,relativeDateClosed]}
         />
 
         <h1>Column+area and drill eventing</h1>
@@ -371,10 +367,10 @@ storiesOf('ComboChart/Column-Line', module)
 				HeaderPredicateFactory.uriMatch(`/gdc/md/${projectId}/obj/1146`),
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
-            filters = {[filterProduct,filterStageName,relativeDate]}
+            filters = {[filterProduct,filterStageName,relativeDateClosed]}
         />
 
-        </div>
+    </div>
 
     ))
     .add('Special combo charts', () => (
@@ -502,4 +498,4 @@ storiesOf('ComboChart/Column-Line', module)
     
     </div>
 
-    ));
+));

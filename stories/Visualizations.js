@@ -71,4 +71,4 @@ storiesOf('Visualizations/Combo chart', module)
     </div>
 
         
-    ));
+));
