@@ -15,6 +15,7 @@ const backendUrlForInfo = backendUrl;
 const projectId = demoProjectId;
 const filterProduct = Model.positiveAttributeFilter('label.product.id.name',["Educationly","Explorer","CompuSci","PhoenixSoft","WonderKid"],true);
 const filterProductCompuSci = Model.positiveAttributeFilter('label.product.id.name',["CompuSci"],true);
+const filterProductExplorerGrammarPlus = Model.positiveAttributeFilter('label.product.id.name',["Explorer","Grammar Plus"],true);
 const filterProductTouchAll = Model.positiveAttributeFilter('label.product.id.name',["TouchAll"],true);
 const filterProductNegative = Model.negativeAttributeFilter('label.product.id.name',["TouchAll","PhoenixSoft"],true);
 const filterStageNameNegative = Model.negativeAttributeFilter(`/gdc/md/${projectId}/obj/1805`,[`/gdc/md/${projectId}/obj/1095/elements?id=966649`]);
@@ -27,6 +28,7 @@ const filterStageName = Model.positiveAttributeFilter(`/gdc/md/${projectId}/obj/
     `/gdc/md/${projectId}/obj/1095/elements?id=966648`,
     `/gdc/md/${projectId}/obj/1095/elements?id=1251`]);
 const filterStageNameInterest = Model.positiveAttributeFilter(`/gdc/md/${projectId}/obj/1805`,["Interest"],true);
+const filterStageNameInterestShortList = Model.positiveAttributeFilter(`/gdc/md/${projectId}/obj/1805`,["Interest","Short List"],true);
 const filterDepartment = Model.positiveAttributeFilter('label.owner.department',["Direct Sales"],true);
 const relativeDateYearSnapshot = Model.relativeDateFilter('snapshot.dataset.dt','GDC.time.year',-1,-1);
 const filterFirstName = Model.positiveAttributeFilter('label.persons.firstname',["Anh","Bao","Cuong"],true);
@@ -37,6 +39,19 @@ const relativeDateMonth = Model.relativeDateFilter('closed.dataset.dt','GDC.time
 const relativeDateQuater = Model.relativeDateFilter('closed.dataset.dt','GDC.time.quarter',-50,-4);
 const relativeDateWeek = Model.relativeDateFilter('closed.dataset.dt','GDC.time.week',-500,-1);
 const relativeDateWeekUs = Model.relativeDateFilter('closed.dataset.dt','GDC.time.week_us',-500,-1);
+
+const absoluteYearSnapshot = Model.absoluteDateFilter('snapshot.dataset.dt','2011-01-01','2011-06-30');
+const relativeYearSnapshot = Model.relativeDateFilter('snapshot.dataset.dt','GDC.time.year',-8,0);
+
+const m_ActivityRestricted = Model.measure(`/gdc/md/${projectId}/obj/1253`).localIdentifier('ActivityRestricted').aggregation('sum');
+const m_AmountNullFormat = Model.measure(`/gdc/md/${projectId}/obj/1279`)
+    .localIdentifier('AmountNullFormat')
+    .format('[=null]trống; #,##0.00;');
+const m_AmountNegative = Model.measure(`/gdc/md/${projectId}/obj/76156`).localIdentifier("AmountNegative");
+const m_AmountRatio = Model.measure(`/gdc/md/${projectId}/obj/1279`)
+    .localIdentifier('AmountRatio')
+    .ratio()
+    .aggregation('sum');
 
 const m_SumDayToCloseRatio = Model.measure(`/gdc/md/${projectId}/obj/1146`)
    .localIdentifier('SumDayToCloseRatio')
@@ -51,7 +66,7 @@ const m_SumDayToClose = Model.measure(`/gdc/md/${projectId}/obj/1146`)
    .localIdentifier('SumDayToClose')
    .title('<button>Sum days to close</button>')
    .aggregation('sum')
-   .filters(filterProduct)
+   //.filters(filterProduct)
    ;
 
 const m_POP_SumDayToClose = Model.popMeasure('SumDayToClose', `/gdc/md/${projectId}/obj/323`)
@@ -77,7 +92,7 @@ const m_MinPaid = Model.measure('fact.persons.paid')
 const m_SumSalary = Model.measure('fact.persons.salary')
    .localIdentifier('SumSalary')
    .title('Sum of Salary')
-   .aggregation('sum') ;
+   .aggregation('sum');
 
 const m_OppFirstSnapshot = Model.measure(`/gdc/md/${projectId}/obj/9381`).localIdentifier('OppFirstSnapshot');
 const m_SnapshotEOP = Model.measure(`/gdc/md/${projectId}/obj/1275`).localIdentifier('SnapshotEOP');
@@ -94,7 +109,8 @@ const m_CountStageHistoryRatio = Model.measure(`/gdc/md/${projectId}/obj/1174`)
     .aggregation('count')
     .ratio()
     .localIdentifier('CountStageHistoryWithRatio');
-const m_Amount = Model.measure(`/gdc/md/${projectId}/obj/1279`);
+const m_Amount = Model.measure(`/gdc/md/${projectId}/obj/1279`).localIdentifier('Amount');
+const m_AmountDuplicate = Model.measure(`/gdc/md/${projectId}/obj/1279`).localIdentifier('AmountDuplicate');
 const m_ClosedEOP = Model.measure(`/gdc/md/${projectId}/obj/9203`).localIdentifier('ClosedEOP');
 const m_ClosedBOP = Model.measure(`/gdc/md/${projectId}/obj/9211`).localIdentifier('ClosedBOP');
 const m_CountProduct = Model.measure(`/gdc/md/${projectId}/obj/949`)
@@ -124,6 +140,139 @@ const a_Address = Model.attribute('label.persons.address').localIdentifier('Addr
 const a_StartFrom = Model.attribute('startfrom.aag81lMifn6q').localIdentifier('YearStartFrom');
 const a_YearClosed = Model.attribute('closed.aag81lMifn6q');
 const a_YearSnapshot = Model.attribute('snapshot.aag81lMifn6q');
+
+
+const filterAmount_GreaterThan = {
+    measureValueFilter: {
+      measure: {
+         localIdentifier: "Amount"
+      },
+      condition: {
+         comparison: {
+            operator: "GREATER_THAN",
+            value: 5000000
+          }
+      }
+  }};
+
+  const filterAmount_EqualTo = {
+    measureValueFilter: {
+      measure: {
+         localIdentifier: "Amount"
+      },
+      condition: {
+         comparison: {
+            operator: "EQUAL_TO",
+            value: 57025
+          }
+      }
+  }};
+
+  const filterAmountNegative_NotEqualTo = 
+{
+    measureValueFilter: {
+        measure: {
+            localIdentifier: "AmountNegative"
+        },
+        condition: {
+            range: {
+                operator: "NOT_EQUAL_TO", 
+                value: 57025
+            }
+         }
+     }
+};
+
+  const filterAmount_NotBetween = {
+    measureValueFilter: {
+      measure: {
+        localIdentifier: "Amount"
+    },
+    condition: {
+        range: {
+            operator: "NOT_BETWEEN", 
+            from: 0, 
+            to: 20000000
+        }
+     }
+ 
+  }};
+
+const filterAmountRatio_LessThan = 
+    {
+      measureValueFilter: {
+        measure: {
+           localIdentifier: "AmountRatio"
+        },
+        condition: {
+           comparison: {
+              operator: "LESS_THAN",
+              value: 0.05
+            }
+        }
+      }
+    };
+    
+const filterAmount_Between = 
+{
+    measureValueFilter: {
+        measure: {
+            localIdentifier: "Amount"
+        },
+        condition: {
+            range: {
+                operator: "BETWEEN", 
+                from: 1000000, 
+                to: 5000000
+            }
+         }
+     }
+};
+const filterAmountNullFormat_GreaterThanOrEqualTo = 
+{
+    measureValueFilter: {
+        measure: {
+            localIdentifier: "Amount"
+        },
+        condition: {
+            range: {
+                operator: "GREATER_THAN_OR_EQUAL_TO", 
+                value: 5000000
+            }
+         }
+     }
+};
+const filterActivityRestricted_LessThanOrEqualTo = 
+{
+    measureValueFilter: {
+        measure: {
+            localIdentifier: "ActivityRestricted"
+        },
+        condition: {
+            range: {
+                operator: "LESS_THAN_OR_EQUAL_TO", 
+                value: 5000000
+            }
+         }
+     }
+};
+const sortbyStageNameTotal = 
+{
+    attributeSortItem: {
+            direction: 'desc', 
+            attributeIdentifier: 'StageName',
+            aggregation: 'sum' 
+        }
+    }
+
+const sortbyProductTotal = 
+    {
+        attributeSortItem: {
+                direction: 'desc', 
+                attributeIdentifier: 'ProductName',
+                aggregation: 'sum' 
+            }
+        }
 
 export default {
     projectId,
@@ -181,5 +330,24 @@ export default {
     a_StageName,
     a_StartFrom,
     a_YearClosed,
-    
+    a_YearSnapshot,
+    filterAmount_GreaterThan,
+    m_AmountRatio,
+    filterAmountRatio_LessThan,
+    absoluteYearSnapshot,
+    relativeYearSnapshot,
+    filterAmount_Between,
+    filterAmount_EqualTo,
+    filterAmount_NotBetween,
+    m_AmountNegative,
+    filterAmountNegative_NotEqualTo,
+    m_AmountNullFormat,
+    filterAmountNullFormat_GreaterThanOrEqualTo,
+    m_ActivityRestricted,
+    filterActivityRestricted_LessThanOrEqualTo,
+    m_AmountDuplicate,
+    sortbyStageNameTotal,
+    sortbyProductTotal,
+    filterStageNameInterestShortList,
+    filterProductExplorerGrammarPlus
 };
