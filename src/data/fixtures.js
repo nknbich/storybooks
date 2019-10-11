@@ -139,7 +139,7 @@ const a_Lastname = Model.attribute('label.persons.lastname').localIdentifier('La
 const a_Address = Model.attribute('label.persons.address').localIdentifier('Address');
 const a_StartFrom = Model.attribute('startfrom.aag81lMifn6q').localIdentifier('YearStartFrom');
 const a_YearClosed = Model.attribute('closed.aag81lMifn6q');
-const a_YearSnapshot = Model.attribute('snapshot.aag81lMifn6q');
+const a_YearSnapshot = Model.attribute('snapshot.aag81lMifn6q').localIdentifier('YearSnapshot');
 
 
 const filterAmount_GreaterThan = {

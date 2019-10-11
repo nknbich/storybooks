@@ -46,9 +46,9 @@ storiesOf('BarChart', module)
             projectId={fixtures.projectId}
             measures={[fixtures.m_SumDayToCloseRatio]}
             viewBy={[fixtures.a_Product]}
-            config={{
-                stackMeasuresToPercent: true
-            }}
+            // config={{
+            //     stackMeasuresToPercent: true
+            // }}
             drillableItems={[
                 HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/952`),
             ]}
@@ -773,6 +773,180 @@ storiesOf('BarChart', module)
             
             drillableItems={[
                 HeaderPredicateFactory.identifierMatch('label.stage.name.stagename')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+
+        </div>
+    ))
+    .add('Stacked Bar Chart - sorting',() => (
+        <div style={WRAPPER_STYLE}>
+            <h1>1M 1VB 1SB</h1>
+            <h1>No Ratio, stackMeasuresToPercent, drill by viewBy, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_SumDayToClose]}
+            viewBy={[fixtures.a_Product]}
+            stackBy={fixtures.a_StageName}
+             config={{
+                 stackMeasuresToPercent: true
+             }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.product.id.name')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>Ratio, stackMeasuresToPercent, drill by viewBy, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_SumDayToCloseRatio]}
+            viewBy={[fixtures.a_Product]}
+            stackBy={fixtures.a_StageName}
+            config={{
+                 stackMeasuresToPercent: true
+             }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.product.id.name')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>Ratio, stackMeasures, drill by one value of stackBy, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_SumDayToCloseRatio]}
+            viewBy={[fixtures.a_Product]}
+            stackBy={fixtures.a_StageName}
+            config={{
+                stackMeasures: true
+            }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1095/elements?id=966644`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>1M 2VB 1SB</h1>
+            <h1>NoRatio, stackMeasuresToPercent, stack by child, drill by child, sort by StageName value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_SumDayToClose]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
+            stackBy={fixtures.a_StageName}
+             config={{
+                 stackMeasuresToPercent: true
+             }}
+            filters={[fixtures.filterStageNameInterestShortList]}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.stage.name.stagename')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>NoRatio, stackMeasuresToPercent, stack by child, drill by parent, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_SumDayToClose]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
+            stackBy={fixtures.a_StageName}
+            //  config={{
+            //      stackMeasuresToPercent: true
+            //  }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.product.id.name')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>Ratio, stackMeasuresToPercent, stack by parent, drill by parent, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_SumDayToClose]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
+            stackBy={fixtures.a_Product}
+            //  config={{
+            //      stackMeasuresToPercent: true
+            //  }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.product.id.name')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>Ratio, stackMeasuresToPercent, stack by parent, drill by child, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_SumDayToClose]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
+            stackBy={fixtures.a_Product}
+            //  config={{
+            //      stackMeasuresToPercent: true
+            //  }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.stage.name.stagename')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>NoRatio, stackMeasures, stack by different, drill by StackBy, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_SumDayToCloseRatio]}
+            viewBy={[fixtures.a_Product, fixtures.a_StageName]}
+            stackBy={fixtures.a_Department}
+             config={{
+                 stackMeasures: true
+            }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.owner.department')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>Negative</h1>
+            <h1>No Ratio, stackMeasuresToPercent, drill by viewBy, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_AmountNegative]}
+            viewBy={[fixtures.a_Product]}
+            stackBy={fixtures.a_StageName}
+              config={{
+                  stackMeasuresToPercent: true
+              }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.product.id.name')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>Ratio, stackMeasuresToPercent, drill by viewBy, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_AmountNegative]}
+            viewBy={[fixtures.a_Product]}
+            stackBy={fixtures.a_StageName}
+             config={{
+                  stackMeasuresToPercent: true
+              }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.identifierMatch('label.product.id.name')
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            />
+            <h1>Ratio, stackMeasures, drill by one value of stackBy, sort by product value</h1>
+            <BarChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_AmountNegative]}
+            viewBy={[fixtures.a_Product]}
+            stackBy={fixtures.a_StageName}
+            config={{
+                stackMeasures: true
+            }}
+            sortBy={[fixtures.sortbyProductTotal]}
+            drillableItems={[
+                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1095/elements?id=966644`)
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             />
