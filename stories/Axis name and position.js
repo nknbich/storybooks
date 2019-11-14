@@ -1176,7 +1176,26 @@ storiesOf('Axis name and position', module)
                 }}
             />
 
-
+<h1>5. combine</h1>
+                        <Visualization
+                            projectId={fixtures.projectId}
+                            identifier="adm3s7hoa6Uk"
+                            filters = {[
+                                {
+                                   "measureValueFilter" : {
+                                      "condition" : {
+                                         "comparison" : {
+                                            "operator" : "GREATER_THAN_OR_EQUAL_TO",
+                                            "value" : 100
+                                         }
+                                      },
+                                      "measure" : {
+                                         "localIdentifier" : "a2db5e17b01e42748a0de2d438e7c14b"
+                                      }
+                                   }
+                                }
+                       ]}
+                        />   
         </div>
     ))
     ;

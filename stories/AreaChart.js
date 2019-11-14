@@ -3,7 +3,7 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
-import { AreaChart, HeaderPredicateFactory, Visualization } from '@gooddata/react-components';
+import { AreaChart, HeaderPredicateFactory, Visualization, PieChart, LineChart, ColumnChart } from '@gooddata/react-components';
 
 import fixtures from '../src/data/fixtures'; 
 const WRAPPER_STYLE = { width: 1200, height: 400 };

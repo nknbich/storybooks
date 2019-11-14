@@ -79,7 +79,7 @@ const m_PP_SumDayToClose = Model.previousPeriodMeasure('SumDayToClose', [{dataSe
 
 //M1: _Closed [BOP], M2: _Snapshot [BOP]
 const m_Sum_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'sum');
-const m_Change_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'change');
+const m_Change_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'change').localIdentifier('ChangeClosedBOPSnapshotBOP');
 const m_Difference_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'difference');
 const m_Ratio_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'ratio');
 const m_Multiplication_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'],'multiplication');
@@ -155,15 +155,15 @@ const filterAmount_GreaterThan = {
       }
   }};
 
-  const filterAmount_EqualTo = {
+  const filterChange_EqualTo = {
     measureValueFilter: {
       measure: {
-         localIdentifier: "Amount"
+         localIdentifier: "ChangeClosedBOPSnapshotBOP"
       },
       condition: {
          comparison: {
             operator: "EQUAL_TO",
-            value: 57025
+            value: -1
           }
       }
   }};
@@ -198,7 +198,7 @@ const filterAmount_GreaterThan = {
  
   }};
 
-const filterAmountRatio_LessThan = 
+const filterAmountRatio_GreaterThan = 
     {
       measureValueFilter: {
         measure: {
@@ -206,24 +206,24 @@ const filterAmountRatio_LessThan =
         },
         condition: {
            comparison: {
-              operator: "LESS_THAN",
-              value: 0.05
+              operator: "GREATER_THAN",
+              value: 5000000
             }
         }
       }
     };
     
-const filterAmount_Between = 
+const filterPOPSumDayToClose_Between = 
 {
     measureValueFilter: {
         measure: {
-            localIdentifier: "Amount"
+            localIdentifier: "POP_SumDayToClose"
         },
         condition: {
             range: {
                 operator: "BETWEEN", 
-                from: 1000000, 
-                to: 5000000
+                from: 20000, 
+                to: 100000
             }
          }
      }
@@ -333,11 +333,11 @@ export default {
     a_YearSnapshot,
     filterAmount_GreaterThan,
     m_AmountRatio,
-    filterAmountRatio_LessThan,
+    filterAmountRatio_GreaterThan,
     absoluteYearSnapshot,
     relativeYearSnapshot,
-    filterAmount_Between,
-    filterAmount_EqualTo,
+    filterPOPSumDayToClose_Between,
+    filterChange_EqualTo,
     filterAmount_NotBetween,
     m_AmountNegative,
     filterAmountNegative_NotEqualTo,
