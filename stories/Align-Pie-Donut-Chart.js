@@ -163,7 +163,7 @@ storiesOf('Align-PieDonut-Chart', module)
                     }}
                 />
             </div>
-            <h1>2 measures, Align: top</h1>
+            <h1>2 measures, Align: middle</h1>
             <div style={{ width: 400, height: 800, border: "solid 2px black" }}>
                 <DonutChart
                     projectId={fixtures.projectId}
@@ -173,12 +173,12 @@ storiesOf('Align-PieDonut-Chart', module)
                             visible: true
                         },
                         chart: {
-                            verticalAlign: 'top'
+                            verticalAlign: 'middle'
                         }
                     }}
                 />
             </div>
-            <h1>2 measures, 1 viewBy, Align: top</h1>
+            <h1>2 measures, 1 viewBy, Align: bottom</h1>
             <div style={{ width: 400, height: 800, border: "solid 2px black" }}>
                 <DonutChart
                     projectId={fixtures.projectId}
@@ -189,12 +189,12 @@ storiesOf('Align-PieDonut-Chart', module)
                             visible: true
                         },
                         chart: {
-                            verticalAlign: 'top'
+                            verticalAlign: 'bottom'
                         }
                     }}
                 />
             </div>
-            <h1>20 measures, Align: top</h1>
+            <h1>many measures, Align: top</h1>
             <div style={{ width: 400, height: 800, border: "solid 2px black" }}>
                 <DonutChart
                     projectId={fixtures.projectId}
@@ -209,7 +209,7 @@ storiesOf('Align-PieDonut-Chart', module)
                     }}
                 />
             </div>
-            <h1>has restrict data, Align: top</h1>
+            <h1>has restrict data, Align: middle</h1>
             <div style={{ width: 400, height: 800, border: "solid 2px black" }}>
                 <DonutChart
                     projectId={fixtures.projectId}
@@ -220,7 +220,7 @@ storiesOf('Align-PieDonut-Chart', module)
                             visible: true
                         },
                         chart: {
-                            verticalAlign: 'top'
+                            verticalAlign: 'middle'
                         }
                     }}
                 />
@@ -580,6 +580,29 @@ storiesOf('Align-PieDonut-Chart', module)
                             verticalAlign: 'bottom'
                         }
 
+                    }}
+                />
+            </div>
+        </div>
+    ))
+    .add('invalid values of position parameter', () => (
+        <div style={WRAPPER_STYLE}>
+            <h1>invalid values of position parameter, check Align: default (middle) </h1>
+            <div style={{ width: 400, height: 800, border: "solid 2px black" }}>
+                <PieChart
+                    projectId={fixtures.projectId}
+                    measures={[fixtures.m_ClosedBOP, fixtures.m_AmountBOP]}
+                    config={{
+                        dataLabels: {
+                            visible: true
+                        },
+                        chart: {
+                            verticalAlign: 'BOTTOM'
+                        },
+                        legend: {
+                            enabled: true,
+                            position: 'bottom'
+                        },
                     }}
                 />
             </div>

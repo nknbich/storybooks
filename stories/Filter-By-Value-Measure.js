@@ -2,9 +2,27 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
-import { Headline, PivotTable, ColumnChart, BarChart, LineChart, AreaChart, HeaderPredicateFactory, PieChart, DonutChart, Treemap, Heatmap, ComboChart, Kpi, Visualization, ScatterPlot, BubbleChart } from '@gooddata/react-components';
+import { Headline, PivotTable, ColumnChart, BarChart, LineChart, AreaChart, HeaderPredicateFactory, PieChart, DonutChart, Treemap, Heatmap, ComboChart, Visualization, ScatterPlot, BubbleChart } from '@gooddata/react-components';
 import fixtures from '../src/data/fixtures';
 import { ConfigModule } from '@gooddata/gooddata-js/lib/config';
+
+const DOWNLOADER_ID = 'downloader';
+let exportResult: any;
+
+function onExportReady(execution: any) {
+   exportResult = execution;
+}
+
+async function doExport() {
+   const result = await exportResult({
+      format: 'xlsx',
+      includeFilterContext: true,
+      mergeHeaders: true
+   });
+   //downloadFile(result.uri);
+   window.open(result.uri);
+}
+
 const WRAPPER_STYLE = { width: 1200, height: 400 };
 storiesOf('Filter by value measure', module)
    .add('Pivot Table', () => (
@@ -25,69 +43,104 @@ storiesOf('Filter by value measure', module)
             columns={[fixtures.a_Product]}
             filters={[fixtures.filterAmountRatio_GreaterThan]}
          />
-         <h1>AM - Filter positive attribute + absolute date, Change_ClosedBOP_SnapshotBOP = -100%</h1>
+         <h1>AM - Filter positive attribute + absolute date, Change_ClosedBOP_SnapshotBOP = -100%
+         </h1>
          <PivotTable
             projectId={fixtures.projectId}
-            measures={[fixtures.m_ClosedBOP,fixtures.m_SnapshotBOP,fixtures.m_Change_ClosedBOP_SnapshotBOP]}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_SnapshotBOP, fixtures.m_Change_ClosedBOP_SnapshotBOP]}
             rows={[fixtures.a_StageName, fixtures.a_Product]}
             columns={[fixtures.a_YearSnapshot]}
             filters={[fixtures.filterChange_EqualTo, fixtures.filterStageNameInterest, fixtures.absoluteYearSnapshot]}
          />
-         <h1>PP, SLPY - Combine all filters, m_POP_SumDayToClose between 20000 and 100000, drill measure</h1>
+         <h1>PP, SLPY - Combine all filters, m_POP_SumDayToClose between 20000 and 100000</h1>
          <PivotTable
             projectId={fixtures.projectId}
-            measures={[fixtures.m_SumDayToClose,fixtures.m_POP_SumDayToClose]}
+            measures={[fixtures.m_SumDayToClose, fixtures.m_POP_SumDayToClose]}
             rows={[fixtures.a_YearClosed]}
             columns={[fixtures.a_StageName]}
             filters={[fixtures.filterPOPSumDayToClose_Between, fixtures.filterStageNameNegative, fixtures.relativeYearSnapshot]}
+         />
+         <h1>Pivot has sub-total and sort attribute Product
+            Amount less than 1000000, drill Amount, export to xlsx</h1>
+         <button onClick={() => doExport()}>Export</button>
+         <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_Amount]}
+            rows={[fixtures.a_Product, fixtures.a_StageName]}
+            columns={[fixtures.a_Product]}
+            totals={[fixtures.totalsPivotTable]}
+            sortBy={fixtures.sortonPivotTable}
+            filters={[fixtures.filterAmount_LessThan]}
             drillableItems={[
                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
       </div>
    ))
    .add('Column Chart', () => (
       <div style={WRAPPER_STYLE}>
-         <h1>Amount>5000000</h1>
+         <h1>Amount>5000000, drill Amount, export to xlsx</h1>
+         <button onClick={doExport}>Export</button>
          <ColumnChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount]}
             viewBy={[fixtures.a_StageName]}
             stackBy={fixtures.a_Product}
             filters={[fixtures.filterAmount_GreaterThan]}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
-         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%</h1>
+         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%, stack to %</h1>
          <ColumnChart
             projectId={fixtures.projectId}
-            measures={[fixtures.m_ClosedBOP,fixtures.m_SnapshotBOP,fixtures.m_Change_ClosedBOP_SnapshotBOP]}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_SnapshotBOP, fixtures.m_Change_ClosedBOP_SnapshotBOP]}
             viewBy={[fixtures.a_StageName]}
             filters={[fixtures.filterChange_EqualTo]}
+            config={{
+               stackMeasures: true,
+               stackMeasuresToPercent: true
+            }}
          />
       </div>
    ))
-   .add('Bar Chart', () => ( 
+   .add('Bar Chart', () => (
       <div style={WRAPPER_STYLE}>
-         <h1>Amount>5000000</h1>
+         <h1>Amount>5000000, drill Amount, export to xlsx</h1>
+         <button onClick={doExport}>Export</button>
          <BarChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount]}
             viewBy={[fixtures.a_StageName]}
             stackBy={fixtures.a_Product}
             filters={[fixtures.filterAmount_GreaterThan]}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
-         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%</h1>
+         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%, stack to %</h1>
          <BarChart
             projectId={fixtures.projectId}
-            measures={[fixtures.m_ClosedBOP,fixtures.m_SnapshotBOP,fixtures.m_Change_ClosedBOP_SnapshotBOP]}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_SnapshotBOP, fixtures.m_Change_ClosedBOP_SnapshotBOP]}
             viewBy={[fixtures.a_StageName]}
             filters={[fixtures.filterChange_EqualTo]}
+            config={{
+               stackMeasures: true,
+               stackMeasuresToPercent: true
+            }}
          />
       </div>
    ))
    .add('Line Chart', () => (
       <div style={WRAPPER_STYLE}>
-         <h1>Amount>5000000</h1>
+         <h1>Amount>5000000, drill Amount, export to xlsx</h1>
+         <button onClick={doExport}>Export</button>
          <LineChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount]}
@@ -96,27 +149,35 @@ storiesOf('Filter by value measure', module)
             filters={[fixtures.filterAmount_GreaterThan]}
             config={{
                dataLabels: {
-                  visible: 'true' 
-              },
+                  visible: 'true'
+               },
             }}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
-         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%</h1>
+         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%, stack to %</h1>
          <LineChart
             projectId={fixtures.projectId}
-            measures={[fixtures.m_ClosedBOP,fixtures.m_SnapshotBOP,fixtures.m_Change_ClosedBOP_SnapshotBOP]}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_SnapshotBOP, fixtures.m_Change_ClosedBOP_SnapshotBOP]}
             trendBy={fixtures.a_StageName}
             filters={[fixtures.filterChange_EqualTo]}
             config={{
                dataLabels: {
-                  visible: 'true' 
-              },
+                  visible: 'true'
+               },
+               stackMeasures: true,
+               stackMeasuresToPercent: true
             }}
          />
       </div>
    ))
    .add('Area Chart', () => (
       <div style={WRAPPER_STYLE}>
-         <h1>Amount>5000000</h1>
+         <h1>Amount>5000000, drill Amount, export to xlsx</h1>
+         <button onClick={doExport}>Export</button>
          <AreaChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount]}
@@ -125,60 +186,83 @@ storiesOf('Filter by value measure', module)
             filters={[fixtures.filterAmount_GreaterThan]}
             config={{
                dataLabels: {
-                  visible: 'true' 
-              },
+                  visible: 'true'
+               },
             }}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
-         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%</h1>
+         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%, stack to %</h1>
          <AreaChart
             projectId={fixtures.projectId}
-            measures={[fixtures.m_ClosedBOP,fixtures.m_SnapshotBOP,fixtures.m_Change_ClosedBOP_SnapshotBOP]}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_SnapshotBOP, fixtures.m_Change_ClosedBOP_SnapshotBOP]}
             viewBy={[fixtures.a_StageName]}
             filters={[fixtures.filterChange_EqualTo]}
             config={{
                dataLabels: {
-                  visible: 'true' 
-              },
+                  visible: 'true'
+               },
+               stackMeasures: true,
+               stackMeasuresToPercent: true
             }}
          />
       </div>
    ))
    .add('Combo Chart', () => (
       <div style={WRAPPER_STYLE}>
-         <h1>Amount>5000000</h1>
+         <h1>Amount>5000000, drill Amount, export to xlsx</h1>
+         <button onClick={doExport}>Export</button>
          <ComboChart
             projectId={fixtures.projectId}
             primaryMeasures={[fixtures.m_Amount]}
             secondaryMeasures={[fixtures.m_AmountBOP]}
             viewBy={[fixtures.a_StageName]}
             filters={[fixtures.filterAmount_GreaterThan]}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
-         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%</h1>
+         <h1>AM - Change_ClosedBOP_SnapshotBOP = -100%, stack to %</h1>
          <ComboChart
             projectId={fixtures.projectId}
-            primaryMeasures={[fixtures.m_ClosedBOP,fixtures.m_SnapshotBOP]}
+            primaryMeasures={[fixtures.m_ClosedBOP, fixtures.m_SnapshotBOP]}
             secondaryMeasures={[fixtures.m_Change_ClosedBOP_SnapshotBOP]}
             viewBy={[fixtures.a_StageName]}
             filters={[fixtures.filterChange_EqualTo]}
+            config={{
+               stackMeasures: true,
+               stackMeasuresToPercent: true
+            }}
          />
       </div>
    ))
    .add('Scatter Plot/Bubble Chart', () => (
       <div style={WRAPPER_STYLE}>
-         <h1>Amount>5000000</h1>
+         <h1>Amount>5000000, drill Amount, export to xlsx</h1>
+         <button onClick={doExport}>Export</button>
          <ScatterPlot
             projectId={fixtures.projectId}
             xAxisMeasure={fixtures.m_Amount}
             yAxisMeasure={fixtures.m_AvgAmount}
             attribute={fixtures.a_StageName}
             config={{
-                dataLabels: {
-                    visible: true
-                }
+               dataLabels: {
+                  visible: true
+               }
             }}
             filters={[fixtures.filterAmount_GreaterThan]}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
-         <h1>Ratio, Amount>5000000</h1>
+         <h1>Ratio, Amount>5000000, stack to %</h1>
          <BubbleChart
             projectId={fixtures.projectId}
             xAxisMeasure={fixtures.m_AmountRatio}
@@ -187,15 +271,18 @@ storiesOf('Filter by value measure', module)
             filters={[fixtures.filterAmountRatio_GreaterThan]}
             config={{
                dataLabels: {
-                   visible: true
-               }
-           }}
+                  visible: true
+               },
+               stackMeasures: true,
+               stackMeasuresToPercent: true
+            }}
          />
       </div>
    ))
    .add('Pie/Donut Chart', () => (
       <div style={WRAPPER_STYLE}>
-         <h1>Amount>5000000</h1>
+         <h1>Amount>5000000, drill Amount, export to xlsx</h1>
+         <button onClick={doExport}>Export</button>
          <PieChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount]}
@@ -203,11 +290,16 @@ storiesOf('Filter by value measure', module)
             filters={[fixtures.filterAmount_GreaterThan]}
             config={{
                dataLabels: {
-                   visible: true
+                  visible: true
                }
-           }}
+            }}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
-         <h1>Ratio, Amount>5000000</h1>
+         <h1>Ratio, Amount>5000000, drill Amount, stack to %</h1>
          <DonutChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_AmountRatio]}
@@ -215,33 +307,49 @@ storiesOf('Filter by value measure', module)
             filters={[fixtures.filterAmountRatio_GreaterThan]}
             config={{
                dataLabels: {
-                   visible: true
-               }
-           }}
+                  visible: true
+               },
+               stackMeasures: true,
+               stackMeasuresToPercent: true
+            }}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
          />
       </div>
    ))
    .add('Treemap/Heatmap', () => (
       <div style={WRAPPER_STYLE}>
-         <h1>Amount>5000000</h1>
+         <h1>Amount>5000000, drill Amount, export to xlsx</h1>
+         <button onClick={doExport}>Export</button>
          <Treemap
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount]}
             viewBy={fixtures.a_StageName}
             segmentBy={fixtures.a_Product}
             filters={[fixtures.filterAmount_GreaterThan]}
+            drillableItems={[
+               HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
+            ]}
+            onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
+            onExportReady={onExportReady}
          />
-         <h1>AM - Filter positive attribute + absolute date, Change_ClosedBOP_SnapshotBOP = -100%</h1>
+         <h1>AM - Filter positive attribute + absolute date, Change_ClosedBOP_SnapshotBOP = -100%
+            stack to %
+         </h1>
          <Heatmap
-           projectId={fixtures.projectId}
-           measure={fixtures.m_AmountRatio}
-           rows={fixtures.a_StageName}
-           columns={fixtures.a_Product}
-           config={{
+            projectId={fixtures.projectId}
+            measure={fixtures.m_AmountRatio}
+            rows={fixtures.a_StageName}
+            columns={fixtures.a_Product}
+            config={{
                dataLabels: {
-                   visible: true
-               }
-           }}
+                  visible: true
+               },
+               stackMeasures: true,
+               stackMeasuresToPercent: true
+            }}
             filters={[fixtures.filterAmountRatio_GreaterThan]}
          />
       </div>
@@ -331,18 +439,40 @@ storiesOf('Filter by value measure', module)
             primaryMeasure={fixtures.m_Amount}
             filters={[fixtures.filterAmount_GreaterThan]}
          />
-         <h1>Insight has measure, no attribute/date</h1>
+         <h1>Insight has only measures</h1>
          <ColumnChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount, fixtures.m_AvgAmount]}
             filters={[fixtures.filterAmount_GreaterThan]}
          />
          <h1>Insight has many measures that there are more than one measure value filter, but each filter references to the same measure.</h1>
+         <h3>1. Filter duplicate 1 measure: Difference logical-operators</h3>
          <ColumnChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount, fixtures.m_AmountRatio]}
             viewBy={[fixtures.a_Product]}
             filters={[fixtures.filterAmount_GreaterThan, fixtures.filterAmount_NotBetween]}
+         />
+         <h3>1. Filter duplicate 1 measure: Difference value</h3>
+         <ColumnChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_Amount, fixtures.m_AmountRatio]}
+            viewBy={[fixtures.a_Product]}
+            filters={[fixtures.filterAmount_GreaterThan, fixtures.filterAmount_GreaterThan_differencevalue]}
+         />
+         <h3>2. Filter duplicate 1 measure: same value</h3>
+         <ColumnChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_Amount, fixtures.m_AmountRatio]}
+            viewBy={[fixtures.a_Product]}
+            filters={[fixtures.filterAmount_GreaterThan, fixtures.filterAmount_GreaterThan_samevalue]}
+         />
+         <h3>3. Filter duplicate more measures</h3>
+         <ColumnChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_Amount, fixtures.m_AmountRatio]}
+            viewBy={[fixtures.a_Product]}
+            filters={[fixtures.filterAmount_GreaterThan, fixtures.filterAmount_NotBetween, fixtures.filterAmountRatio_GreaterThan, fixtures.filterAmountRatio_LessThan]}
          />
          <h1>Insight applies measure value filters that reference measure that is not in the AFM</h1>
          <ColumnChart

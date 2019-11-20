@@ -1190,5 +1190,19 @@ storiesOf('BarChart', module)
                 ]}
                 onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             />
+            <Visualization
+            projectId={fixtures.projectId}
+            identifier="aalW06ayiBwo"
+            sortBy={[
+                {
+                    "attributeSortItem": {
+                            "direction": 'desc', 
+                            "attributeIdentifier": 'e469b79b91e240d98f4fc9d38372a3ed',
+                            "aggregation": 'sum' 
+                        }
+                    }
+            ]}
+            
+        />
         </div>
     ));
