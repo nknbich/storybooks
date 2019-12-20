@@ -139,7 +139,7 @@ const a_FirstName = Model.attribute('label.persons.firstname').localIdentifier('
 const a_Lastname = Model.attribute('label.persons.lastname').localIdentifier('Lastname');
 const a_Address = Model.attribute('label.persons.address').localIdentifier('Address');
 const a_StartFrom = Model.attribute('startfrom.aag81lMifn6q').localIdentifier('YearStartFrom');
-const a_YearClosed = Model.attribute('closed.aag81lMifn6q');
+const a_YearClosed = Model.attribute('closed.aag81lMifn6q').localIdentifier('YearClosed');
 const a_YearSnapshot = Model.attribute('snapshot.aag81lMifn6q').localIdentifier('YearSnapshot');
 
 
@@ -316,7 +316,7 @@ const filterActivityRestricted_LessThanOrEqualTo =
         }
     }
 };
-const sortbyStageNameTotal =
+const s_sortbyStageNameTotal =
 {
     attributeSortItem: {
         direction: 'desc',
@@ -325,7 +325,7 @@ const sortbyStageNameTotal =
     }
 };
 
-const sortbyProductTotal =
+const s_sortbyProductTotal =
 {
     attributeSortItem: {
         direction: 'desc',
@@ -333,21 +333,42 @@ const sortbyProductTotal =
         aggregation: 'sum'
     }
 };
-const sortonPivotTable = [
+const s_sortonPivotTable = [
     {
       attributeSortItem: {
         attributeIdentifier: 'ProductName',
         direction: 'desc'
       }
     }
-  ]
+  ];
 
-const totalsPivotTable =
+const t_totalsPivotTable =
 {
     measureIdentifier: 'Amount',
     type: 'avg',
     attributeIdentifier: 'StageName'
-}
+};
+
+//Set protected attribute
+const a_Opportunity = Model.attribute('label.opportunity.id.name').localIdentifier('Opportunity');
+//Set masked for attribute
+const a_Priority = Model.attribute('label.activity.priority').localIdentifier('Priority ');
+
+const s_sortByClosedBOPDescWithDepartment = Model.measureSortItem('ClosedBOP','desc')
+.attributeLocators({
+    attributeIdentifier: 'Department',
+    element: `/gdc/md/${projectId}/obj/1026/elements?id=1226`
+});
+
+const s_sortByClosedBOPDesc = Model.measureSortItem('ClosedBOP','desc');
+const s_sortByYearClosed = Model.attributeSortItem('YearClosed','asc');
+const s_sortByYearClosedSumClosedBOP = {
+    attributeSortItem: {
+        direction: 'desc',   // or 'desc',
+        attributeIdentifier: 'StageName',
+        aggregation: 'avg' // Optional;
+    }
+};
 
 export default {
     projectId,
@@ -361,7 +382,23 @@ export default {
     filterFirstName,
     filterFirstNameAnh,
     filterDepartment,
+    filterStageNameInterestShortList,
+    filterProductExplorerGrammarPlus,
+    filterAmount_LessThan,
+    filterAmountRatio_LessThan,
+    filterAmount_GreaterThan_samevalue,
+    filterAmount_GreaterThan_differencevalue,
+    filterAmount_GreaterThan,
+    filterAmountRatio_GreaterThan,
+    filterPOPSumDayToClose_Between,
+    filterChange_EqualTo,
+    filterAmount_NotBetween,
+    filterAmountNegative_NotEqualTo,
+    filterAmountNullFormat_GreaterThanOrEqualTo,
+    filterActivityRestricted_LessThanOrEqualTo,
     absoluteDate,
+    absoluteYearSnapshot,
+    relativeYearSnapshot,
     relativeDateYear,
     relativeDateQuater,
     relativeDateWeek,
@@ -406,29 +443,19 @@ export default {
     a_StartFrom,
     a_YearClosed,
     a_YearSnapshot,
-    filterAmount_GreaterThan,
     m_AmountRatio,
-    filterAmountRatio_GreaterThan,
-    absoluteYearSnapshot,
-    relativeYearSnapshot,
-    filterPOPSumDayToClose_Between,
-    filterChange_EqualTo,
-    filterAmount_NotBetween,
     m_AmountNegative,
-    filterAmountNegative_NotEqualTo,
     m_AmountNullFormat,
-    filterAmountNullFormat_GreaterThanOrEqualTo,
     m_ActivityRestricted,
-    filterActivityRestricted_LessThanOrEqualTo,
     m_AmountDuplicate,
-    sortbyStageNameTotal,
-    sortbyProductTotal,
-    filterStageNameInterestShortList,
-    filterProductExplorerGrammarPlus,
-    sortonPivotTable,
-    totalsPivotTable,
-    filterAmount_LessThan,
-    filterAmountRatio_LessThan,
-    filterAmount_GreaterThan_samevalue,
-    filterAmount_GreaterThan_differencevalue
+    t_totalsPivotTable,
+	a_Opportunity,
+    a_Priority,
+    s_sortByClosedBOPDesc,
+    s_sortbyStageNameTotal,
+    s_sortbyProductTotal,
+    s_sortonPivotTable,
+    s_sortByClosedBOPDescWithDepartment,
+    s_sortByYearClosed,
+    s_sortByYearClosedSumClosedBOP
 };

@@ -68,8 +68,8 @@ storiesOf('Filter by value measure', module)
             measures={[fixtures.m_Amount]}
             rows={[fixtures.a_Product, fixtures.a_StageName]}
             columns={[fixtures.a_Product]}
-            totals={[fixtures.totalsPivotTable]}
-            sortBy={fixtures.sortonPivotTable}
+            totals={[fixtures.t_totalsPivotTable]}
+            sortBy={fixtures.s_sortonPivotTable}
             filters={[fixtures.filterAmount_LessThan]}
             drillableItems={[
                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)

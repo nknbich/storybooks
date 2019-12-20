@@ -966,7 +966,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -982,7 +982,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -998,7 +998,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -1014,7 +1014,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -1031,7 +1031,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -1046,7 +1046,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -1061,7 +1061,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasures: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1095/elements?id=966644`)
                 ]}
@@ -1078,7 +1078,7 @@ storiesOf('BarChart', module)
                     stackMeasuresToPercent: true
                 }}
                 filters={[fixtures.filterStageNameInterestShortList]}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.stage.name.stagename')
                 ]}
@@ -1093,7 +1093,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -1108,7 +1108,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -1123,7 +1123,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.stage.name.stagename')
                 ]}
@@ -1138,7 +1138,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasures: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.owner.department')
                 ]}
@@ -1154,7 +1154,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -1169,7 +1169,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasuresToPercent: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
@@ -1184,7 +1184,7 @@ storiesOf('BarChart', module)
                 config={{
                     stackMeasures: true
                 }}
-                sortBy={[fixtures.sortbyProductTotal]}
+                sortBy={[fixtures.s_sortbyProductTotal]}
                 drillableItems={[
                     HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1095/elements?id=966644`)
                 ]}
