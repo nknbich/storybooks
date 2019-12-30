@@ -82,7 +82,7 @@ class DatePickerExample extends Component {
             ];
         return (
             <div className="s-date-picker">
-                <style jsx>{`
+                <style jsx="true">{`
                     label {
                         display: inline-block;
                         vertical-align: top;
@@ -287,6 +287,8 @@ class ResponsiveExampleNewest extends Component {
                             return (
                                 <div style={{ width: "100%", height: "100%" }} ref={measureRef}>
                                     <BarChart
+                                    width={usedWidth}
+                                    height={usedHeight}
                                     projectId={fixtures.projectId}
                                     measures={[fixtures.m_SumDayToClose]}
                                     viewBy={[fixtures.a_Product]}
