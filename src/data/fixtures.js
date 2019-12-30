@@ -2,9 +2,9 @@ import { Model } from '@gooddata/react-components';
 
 const demoProject = {
     'https://secure.gooddata.com': '',
-    'https://staging3.intgdc.com': 'pbqw1946hsb7q22oqb1xuzma3s75kltx',
-    'https://staging2.intgdc.com': 'd8qmrg8qi02th0pdyxi0jg7ekrv9beqh',
-    'https://staging.intgdc.com': 'egbqln7774to906vx4pfo6ear7w0ifr3'
+    'https://staging3.intgdc.com': 'juobzgs3d6afugtvyp66t537io1uw15f', //pbqw1946hsb7q22oqb1xuzma3s75kltx
+    'https://staging2.intgdc.com': 'ldj9ovlpy1e5hh7ztw8phsmexuukuw78', //d8qmrg8qi02th0pdyxi0jg7ekrv9beqh
+    'https://staging.intgdc.com': 'uaumkml6k5h0ltatq2y5pjohhz3foylo' //egbqln7774to906vx4pfo6ear7w0ifr3
 };
 const backendUrl = "https://staging3.intgdc.com"; // eslint-disable-line no-undef
 const demoProjectId = demoProject[backendUrl];
@@ -371,6 +371,7 @@ const s_sortByYearClosedSumClosedBOP = {
 };
 
 export default {
+    backendUrlForInfo,
     projectId,
     filterProduct,
     filterProductNegative,
@@ -405,6 +406,24 @@ export default {
     relativeDateWeekUs,
     relativeDateMonth,
     relativeDateYearSnapshot,
+    a_Account,
+    a_Activity,
+    a_Address,
+    a_Department,
+    a_FirstName,
+    a_Lastname,
+    a_Product,
+    a_StageName,
+    a_StartFrom,
+    a_YearClosed,
+    a_YearSnapshot,
+    a_Opportunity,
+    a_Priority,
+    m_AmountRatio,
+    m_AmountNegative,
+    m_AmountNullFormat,
+    m_ActivityRestricted,
+    m_AmountDuplicate,
     m_AmountBOP,
     m_AvgAmount,
     m_AvgWon,
@@ -432,25 +451,7 @@ export default {
     m_ClosedBOP,
     m_CountProduct,
     m_MinAmount,
-    a_Account,
-    a_Activity,
-    a_Address,
-    a_Department,
-    a_FirstName,
-    a_Lastname,
-    a_Product,
-    a_StageName,
-    a_StartFrom,
-    a_YearClosed,
-    a_YearSnapshot,
-    m_AmountRatio,
-    m_AmountNegative,
-    m_AmountNullFormat,
-    m_ActivityRestricted,
-    m_AmountDuplicate,
     t_totalsPivotTable,
-	a_Opportunity,
-    a_Priority,
     s_sortByClosedBOPDesc,
     s_sortbyStageNameTotal,
     s_sortbyProductTotal,

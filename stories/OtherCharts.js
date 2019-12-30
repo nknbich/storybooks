@@ -305,7 +305,7 @@ storiesOf('Other Charts', module)
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            //rows={[fixtures.a_yearClosed]}
+            rows={[fixtures.a_YearClosed]}
             columns={[fixtures.a_Product]}
             config={{
                 dataLabels: {
@@ -317,7 +317,7 @@ storiesOf('Other Charts', module)
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            //rows={[fixtures.a_yearClosed]}
+            rows={[fixtures.a_YearClosed]}
             columns={[fixtures.a_Product]}
             config={{
                 dataLabels: {
@@ -329,7 +329,7 @@ storiesOf('Other Charts', module)
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            //rows={[fixtures.a_yearClosed]}
+            rows={[fixtures.a_YearClosed]}
             columns={[fixtures.a_Product]}
             config={{
                 dataLabels: {
@@ -341,8 +341,8 @@ storiesOf('Other Charts', module)
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP, fixtures.m_Amount, fixtures.m_ClosedEOP, fixtures.m_SnapshotBOP]}
-            //rows={[fixtures.a_yearClosed, fixtures.a_StageName]}
-            columns={[fixtures.a_Product, fixtures.a_Deparment]}
+            rows={[fixtures.a_YearClosed, fixtures.a_StageName]}
+            columns={[fixtures.a_Product, fixtures.a_Department]}
             config={{
                 dataLabels: {
                     visible: true

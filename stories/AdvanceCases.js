@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/react';
 import "@gooddata/react-components/styles/css/main.css";
 import { AreaChart, BarChart, LoadingComponent, ErrorComponent,AttributeElements, Model, AttributeFilter } from '@gooddata/react-components';
 import fixtures from '../src/data/fixtures'; 
-import "babel-polyfill";
+//import "babel-polyfill";
 //support for datepicker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -243,7 +243,7 @@ class ErrorComponentExample extends Component {
     }
 };
 
-class ResponsiveExample extends Component {
+class ResponsiveExampleNewest extends Component {
     constructor() {
         super();
         this.state = { size: [500, 400] };
@@ -272,7 +272,7 @@ class ResponsiveExample extends Component {
                 </button>
 
                 <hr className="separator" />
-
+                
                 <div style={{ width, height }} className="s-resizable-vis">
                     <Measure client>
                         {({ measureRef, contentRect }) => {
@@ -294,6 +294,46 @@ class ResponsiveExample extends Component {
                                 </div>
                             );
                         }}
+                    </Measure>
+                </div>
+                
+            </div>
+        );
+    }
+};
+
+class ResponsiveExampleOlder extends Component {
+    constructor() {
+        super();
+        this.state = { size: [500, 400] };
+    }
+
+    resize(size) {
+        this.setState({ size });
+    }
+
+    render() {
+        const [width, height] = this.state.size;
+        return (
+            <div>
+                <button onClick={() => this.setState({ size: [500, 400] })} className="button button-secondary">500x400</button>
+                <button onClick={() => this.setState({ size: [800, 200] })} className="button button-secondary s-resize-800x200">800x200</button>
+
+                <hr className="separator" />
+                
+                <div style={{ width, height }} className="s-resizable-vis">
+                    <Measure>
+                        {dimensions => (
+                            <div style={{ width: '100%', height: '100%' }}>
+                                    <BarChart
+                                    projectId={fixtures.projectId}
+                                    measures={[fixtures.m_SumDayToClose]}
+                                    viewBy={[fixtures.a_Product]}
+                                    width={dimensions.width}
+                                    height={dimensions.height}
+                                    />
+                                </div>
+                        )}
                     </Measure>
                 </div>
             </div>
@@ -392,7 +432,9 @@ storiesOf('Advance cases', module)
     .add('Responsive chart', () => (
     <div>
         <h1>Responsive chart</h1>
-        <ResponsiveExample />
+        <p>Test on version < 7+: use component ResponsiveExampleOlders </p>
+        <p>Test on version >= 7+: use component ResponsiveExampleNewest </p>
+        <ResponsiveExampleNewest />
     </div>    
     ))
     .add('Filter', () => (

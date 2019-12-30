@@ -934,21 +934,23 @@ storiesOf('BarChart', module)
         <div style={WRAPPER_STYLE}>
             <h1>Visualization</h1>
             <p>A. Drill</p>
+            <p>Insight: <a href="https://staging3.intgdc.com/analyze/#/juobzgs3d6afugtvyp66t537io1uw15f/75551/edit">Bar-Dual-Stack% - do not delete</a></p>
             <Visualization
                 projectId={fixtures.projectId}
-                identifier='aab5sCoFcogx'
+                identifier='aahbxqbOcWA7'
                 drillableItems={[
-                    HeaderPredicateFactory.identifierMatch('label.activity.status')
+                    HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
                 onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             />
             <p>B. Locale fr-FR</p>
+            <p>Insight: <a href="https://staging3.intgdc.com/analyze/#/juobzgs3d6afugtvyp66t537io1uw15f/75551/edit">Bar-Dual-Stack% - do not delete</a></p>
             <Visualization
                 projectId={fixtures.projectId}
-                identifier='aabBQac0c6Si'
+                identifier='aahbxqbOcWA7'
 
                 drillableItems={[
-                    HeaderPredicateFactory.identifierMatch('label.stage.name.stagename')
+                    HeaderPredicateFactory.identifierMatch('label.product.id.name')
                 ]}
                 onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             />

@@ -846,18 +846,20 @@ storiesOf('AreaChart', module)
         <div style={WRAPPER_STYLE}>
             <h1>Visualization</h1>
             <p>A. Drill</p>
+            <p>Insight: <a href="https://staging3.intgdc.com/analyze/#/juobzgs3d6afugtvyp66t537io1uw15f/75553/edit">Area-Stack% - do not delete</a></p>
             <Visualization
             projectId={fixtures.projectId}
-            identifier='aacBBNe5cHB3'
+            identifier='aafbzXk7eRXw'
             drillableItems={[
                 HeaderPredicateFactory.identifierMatch('label.product.id.name')
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             />
             <p>B. Locale fr-FR, Drill by child</p>
+            <p>Insight: <a href="https://staging3.intgdc.com/analyze/#/juobzgs3d6afugtvyp66t537io1uw15f/75553/edit">Area-Stack% - do not delete</a></p>
             <Visualization
             projectId={fixtures.projectId}
-            identifier='aaciWRf6cRsR'
+            identifier='aafbzXk7eRXw'
             locale="fr-FR"
             drillableItems={[
                 HeaderPredicateFactory.identifierMatch('label.product.id.name')

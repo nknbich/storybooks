@@ -746,21 +746,23 @@ storiesOf('ColumnChart', module)
         <div style={WRAPPER_STYLE}>
             <h1>Visualization</h1>
             <p>A. Drill by child</p>
+            <p>Insight: <a href="https://staging3.intgdc.com/analyze/#/juobzgs3d6afugtvyp66t537io1uw15f/75550/edit">Column-Dual-Stack% - do not delete</a></p>
             <Visualization
             projectId={fixtures.projectId}
-            identifier='aaqckh2meciU'
+            identifier='aabby915eLSZ'
             drillableItems={[
-                HeaderPredicateFactory.identifierMatch('label.stage.name.stagename')
+                HeaderPredicateFactory.identifierMatch('label.product.id.name')
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             />
             <p>B. Locale fr-FR, Drill by child</p>
+            <p>Insight: <a href="https://staging3.intgdc.com/analyze/#/juobzgs3d6afugtvyp66t537io1uw15f/75550/edit">Column-Dual-Stack% - do not delete</a></p>
             <Visualization
             projectId={fixtures.projectId}
-            identifier='aaqckh2meciU'
+            identifier='aabby915eLSZ'
             locale="fr-FR"
             drillableItems={[
-                HeaderPredicateFactory.identifierMatch('label.stage.name.stagename')
+                HeaderPredicateFactory.identifierMatch('label.product.id.name')
             ]}
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             />
