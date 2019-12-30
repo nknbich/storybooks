@@ -1,9 +1,9 @@
 //author: nknbich
 import React, { Component } from "react";
 
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from "@storybook/react";
 import "@gooddata/react-components/styles/css/main.css";
-import { AreaChart, BarChart, LoadingComponent, ErrorComponent,AttributeElements, Model, AttributeFilter } from '@gooddata/react-components';
+import { AreaChart, Headline, DonutChart, Treemap, ColumnChart, BarChart, LoadingComponent, ErrorComponent, ScatterPlot, BubbleChart, Heatmap, AttributeFilter } from '@gooddata/react-components';
 import fixtures from '../src/data/fixtures'; 
 //import "babel-polyfill";
 //support for datepicker
@@ -120,7 +120,7 @@ class DatePickerExample extends Component {
 };
 
 //custom legend
-class CustomLegendExample extends Component {
+class CustomLegendCore extends Component {
     constructor(props) {
         super(props);
 
@@ -183,16 +183,17 @@ class CustomLegendExample extends Component {
             </div>
         );
     }
+};
 
+class CustomLegendMoreMeasures extends CustomLegendCore {
     render() {
-
         return (
-            <div>
+            <a>
+                <h1>Legend from more measures</h1>
                 {this.renderCustomLegend()}
-                <div style={{ height: 300 }} className="s-pie-chart">
                 <AreaChart
                         projectId={fixtures.projectId}
-                        measures={[fixtures.m_SumDayToClose]}
+                        measures={[fixtures.m_SumDayToClose, fixtures.m_OppFirstSnapshot]}
                         viewBy={[fixtures.a_Product]}
                         onLoadingChanged={this.onLoadingChanged}
                         config={{
@@ -202,9 +203,177 @@ class CustomLegendExample extends Component {
                         }}
                         onError={this.onError}
                         onLegendReady={this.onLegendReady}
-                    />
-                </div>
-            </div>
+                />
+            </a>
+        );
+    }
+};
+
+class CustomLegendStackBy extends CustomLegendCore {
+    render() {
+        return (
+            <a>
+                <h1>Legend from Stack By</h1>
+                {this.renderCustomLegend()}
+                <ColumnChart
+                        projectId={fixtures.projectId}
+                        measures={[fixtures.m_SnapshotBOP]}
+                        viewBy={[fixtures.a_Product]}
+                        stackBy={fixtures.a_StageName}
+                        onLoadingChanged={this.onLoadingChanged}
+                        config={{
+                            legend: {
+                                enabled: false,
+                            },
+                        }}
+                        onError={this.onError}
+                        onLegendReady={this.onLegendReady}
+                />
+            </a>
+        );
+    }
+};
+
+class CustomLegendHeatMap extends CustomLegendCore {
+    render() {
+        return (
+            <a>
+                <h1>Legend from Heatmap (doesn't have legend)</h1>
+                {this.renderCustomLegend()}
+                <Heatmap
+                    projectId={fixtures.projectId}
+                    measure={fixtures.m_ClosedBOP}
+                    rows={fixtures.a_yearClosed}
+                    columns={fixtures.a_Product}
+                    onLoadingChanged={this.onLoadingChanged}
+                    config={{
+                        legend: {
+                            enabled: false,
+                        },
+                    }}
+                    onError={this.onError}
+                    onLegendReady={this.onLegendReady}
+                />
+            </a>
+        );
+    }
+};
+
+class CustomLegendBubbleChart extends CustomLegendCore {
+    render() {
+        return (
+            <a>
+                <h1>Legend from BubbleChart</h1>
+                {this.renderCustomLegend()}
+                <BubbleChart
+                    projectId={fixtures.projectId}
+                    xAxisMeasure={fixtures.m_Amount}
+                    yAxisMeasure={fixtures.m_AmountBOP}
+                    size={fixtures.m_AvgWon}
+                    viewBy={fixtures.a_Product}
+                    onLoadingChanged={this.onLoadingChanged}
+                    config={{
+                        legend: {
+                            enabled: false,
+                        },
+                    }}
+                    onError={this.onError}
+                    onLegendReady={this.onLegendReady}
+                />
+            </a>
+        );
+    }
+};
+class CustomLegendScatterPlot extends CustomLegendCore {
+    render() {
+        return (
+            <a>
+                <h1>Legend from ScatterPlot (doesn't have legend)</h1>
+                {this.renderCustomLegend()}
+                <ScatterPlot
+                    projectId={fixtures.projectId}
+                    xAxisMeasure={fixtures.m_Amount}
+                    yAxisMeasure={fixtures.m_AmountBOP}
+                    attribute={fixtures.a_Product}
+                    onLoadingChanged={this.onLoadingChanged}
+                    config={{
+                        legend: {
+                            enabled: false,
+                        },
+                    }}
+                    onError={this.onError}
+                    onLegendReady={this.onLegendReady}
+                />
+            </a>
+        );
+    }
+};
+class CustomLegendTreemap extends CustomLegendCore {
+    render() {
+        return (
+            <a>
+                <h1>Legend from Treemap</h1>
+                {this.renderCustomLegend()}
+                <Treemap
+                    projectId={fixtures.projectId}
+                    measures={[fixtures.m_ClosedBOP]}
+                    viewBy={fixtures.a_YearClosed}
+                    segmentBy={fixtures.a_Product}
+                    onLoadingChanged={this.onLoadingChanged}
+                    config={{
+                        legend: {
+                            enabled: false,
+                        },
+                    }}
+                    onError={this.onError}
+                    onLegendReady={this.onLegendReady}
+                />
+            </a>
+        );
+    }
+};
+class CustomLegendDonutChart extends CustomLegendCore {
+    render() {
+        return (
+            <a>
+                <h1>Legend from DonutChart</h1>
+                {this.renderCustomLegend()}
+                <DonutChart
+                    projectId={fixtures.projectId}
+                    measures={[fixtures.m_ClosedBOP]}
+                    viewBy={fixtures.a_YearClosed}
+                    onLoadingChanged={this.onLoadingChanged}
+                    config={{
+                        legend: {
+                            enabled: false,
+                        },
+                    }}
+                    onError={this.onError}
+                    onLegendReady={this.onLegendReady}
+                />
+            </a>
+        );
+    }
+};
+class CustomLegendHeadline extends CustomLegendCore {
+    render() {
+        return (
+            <a>
+                <h1>Legend from Headline</h1>
+                {this.renderCustomLegend()}
+                <Headline
+                    projectId={fixtures.projectId}
+                    primaryMeasure={fixtures.m_ClosedBOP}
+                    onLoadingChanged={this.onLoadingChanged}
+                    config={{
+                        legend: {
+                            enabled: false,
+                        },
+                    }}
+                    onError={this.onError}
+                    onLegendReady={this.onLegendReady}
+                />
+            </a>
         );
     }
 };
@@ -343,7 +512,7 @@ class ResponsiveExampleOlder extends Component {
     }
 };
 
-class AttributeFilterExample extends Component {
+class AttributeFilterIdentifierExample extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -379,7 +548,6 @@ class AttributeFilterExample extends Component {
                     fullscreenOnMobile={false}
                     onApply={this.onApply}
                 />
-                <div style={{ height: 300 }}>
                 <BarChart
                     measures={[fixtures.m_ClosedBOP]}
                     viewBy={fixtures.a_StageName}
@@ -387,7 +555,54 @@ class AttributeFilterExample extends Component {
                     projectId={fixtures.projectId}
                     height={500}
                  />
-                </div>
+            </div>
+        );
+    }
+};
+
+class AttributeFilterUriExample extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            filters: []
+        };
+    }
+
+    onApply = (filter) => {
+        console.log('AttributeFilterExample filter', filter);
+
+        const isPositive = !!filter.in;
+        const elementsProp = isPositive ? 'in' : 'notIn';
+
+        const filters = [{
+            [isPositive ? 'positiveAttributeFilter' : 'negativeAttributeFilter']: {
+                displayForm: {
+                    uri: filter.id
+                },
+                [elementsProp]: filter[elementsProp].map(element => (`/gdc/md/${fixtures.projectId}/obj/1095/elements?id=${element}`))
+            }
+        }];
+
+        this.setState({ filters });
+    }
+
+    render() {
+        const { filters } = this.state;
+        return (
+            <div>
+                <AttributeFilter
+                    uri={`/gdc/md/${fixtures.projectId}/obj/1805`}
+                    projectId={fixtures.projectId}
+                    fullscreenOnMobile={false}
+                    onApply={this.onApply}
+                />
+                <BarChart
+                    measures={[fixtures.m_ClosedBOP]}
+                    viewBy={fixtures.a_StageName}
+                    filters={filters}
+                    projectId={fixtures.projectId}
+                    height={500}
+                 />
             </div>
         );
     }
@@ -402,8 +617,14 @@ storiesOf('Advance cases', module)
     ))
     .add('Custom Legend', () => (
     <div style={WRAPPER_STYLE}>
-        <h1>Date picker</h1>
-        <CustomLegendExample />
+        <CustomLegendMoreMeasures />
+        <CustomLegendStackBy />
+        <CustomLegendHeatMap />
+        <CustomLegendBubbleChart />
+        <CustomLegendScatterPlot />
+        <CustomLegendTreemap />
+        <CustomLegendDonutChart />
+        <CustomLegendHeadline />
     </div>    
     ))
     .add('Loading and Error Components', () => (
@@ -440,8 +661,10 @@ storiesOf('Advance cases', module)
     </div>    
     ))
     .add('Filter', () => (
-    <div>
-        <h1>Filter</h1>
-        <AttributeFilterExample />
-    </div>    
+        <div style={WRAPPER_STYLE}>
+        <h1>A. Filter by identifier</h1>
+        <AttributeFilterIdentifierExample />
+        <h1>B. Filter by Uri</h1>
+        <AttributeFilterUriExample />
+        </div>    
     ));

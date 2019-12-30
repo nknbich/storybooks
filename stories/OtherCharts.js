@@ -143,7 +143,7 @@ storiesOf('Other Charts', module)
         <PieChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            viewBy={fixtures.a_yearClosed}
+            viewBy={fixtures.a_YearClosed}
             config={{
                 dataLabels: {
                     visible: true
@@ -155,7 +155,7 @@ storiesOf('Other Charts', module)
         <PieChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            //viewBy={[fixtures.a_yearClosed]}
+            //viewBy={[fixtures.a_YearClosed]}
             config={{
                 dataLabels: {
                     visible: true
@@ -166,7 +166,7 @@ storiesOf('Other Charts', module)
         <PieChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP,fixtures.m_ClosedEOP]}
-            viewBy={fixtures.a_yearClosed}
+            viewBy={fixtures.a_YearClosed}
             config={{
                 dataLabels: {
                     visible: true
@@ -181,7 +181,7 @@ storiesOf('Other Charts', module)
         <DonutChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            viewBy={fixtures.a_yearClosed}
+            viewBy={fixtures.a_YearClosed}
             config={{
                 dataLabels: {
                     visible: true
@@ -193,7 +193,7 @@ storiesOf('Other Charts', module)
         <DonutChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP, fixtures.m_ClosedEOP]}
-            //viewBy={fixtures.a_yearClosed}
+            //viewBy={fixtures.a_YearClosed}
             config={{
                 dataLabels: {
                     visible: true
@@ -204,7 +204,7 @@ storiesOf('Other Charts', module)
         <DonutChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP, fixtures.m_ClosedEOP]}
-            viewBy={fixtures.a_yearClosed}
+            viewBy={fixtures.a_YearClosed}
             config={{
                 dataLabels: {
                     visible: true
@@ -219,7 +219,7 @@ storiesOf('Other Charts', module)
         <Treemap
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            viewBy={fixtures.a_yearClosed}
+            viewBy={fixtures.a_YearClosed}
             segmentBy={fixtures.a_Product}
             config={{
                 dataLabels: {
@@ -234,7 +234,7 @@ storiesOf('Other Charts', module)
         <Treemap
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            viewBy={fixtures.a_yearClosed}
+            viewBy={fixtures.a_YearClosed}
             //segmentBy={fixtures.a_Product}
             config={{
                 dataLabels: {
@@ -249,7 +249,7 @@ storiesOf('Other Charts', module)
         <Treemap
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            //viewBy={fixtures.a_yearClosed}
+            //viewBy={fixtures.a_YearClosed}
             segmentBy={fixtures.a_Product}
             config={{
                 dataLabels: {
@@ -265,7 +265,7 @@ storiesOf('Other Charts', module)
         <Heatmap
             projectId={fixtures.projectId}
             measure={fixtures.m_ClosedBOP}
-            rows={fixtures.a_yearClosed}
+            rows={fixtures.a_YearClosed}
             columns={fixtures.a_Product}
             config={{
                 dataLabels: {
@@ -277,7 +277,7 @@ storiesOf('Other Charts', module)
         <Heatmap
             projectId={fixtures.projectId}
             measure={fixtures.m_ClosedBOP}
-            rows={fixtures.a_yearClosed}
+            rows={fixtures.a_YearClosed}
             //columns={fixtures.a_Product}
             config={{
                 dataLabels: {
@@ -289,7 +289,7 @@ storiesOf('Other Charts', module)
         <Heatmap
             projectId={fixtures.projectId}
             measure={fixtures.m_ClosedBOP}
-            //rows={fixtures.a_yearClosed}
+            //rows={fixtures.a_YearClosed}
             columns={fixtures.a_Product}
             config={{
                 dataLabels: {
