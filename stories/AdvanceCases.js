@@ -432,8 +432,8 @@ storiesOf('Advance cases', module)
     .add('Responsive chart', () => (
     <div>
         <h1>Responsive chart</h1>
-        <p>Test on version < 7+: use component ResponsiveExampleOlders </p>
-        <p>Test on version >= 7+: use component ResponsiveExampleNewest </p>
+        <p>Test on version below 7+: use component ResponsiveExampleOlders </p>
+        <p>Test on version higher 7+: use component ResponsiveExampleNewest </p>
         <ResponsiveExampleNewest />
     </div>    
     ))
