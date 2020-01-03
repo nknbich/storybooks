@@ -129,8 +129,10 @@ const m_AmountBOP = Model.measure(`/gdc/md/${projectId}/obj/2858`).localIdentifi
 const m_AvgAmount = Model.measure(`/gdc/md/${projectId}/obj/62827`);
 const m_AvgWon = Model.measure(`/gdc/md/${projectId}/obj/1281`);
 
-const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/969`);
-const a_Activity = Model.attribute(`/gdc/md/${projectId}/obj/1254`);
+const a_Account = Model.attribute(`label.account.id.name`).localIdentifier('Account');
+//or const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/970`);
+const a_Activity = Model.attribute(`label.activity.id.subject`).localIdentifier('Activity');
+//or const a_Activity = Model.attribute(`/gdc/md/${projectId}/obj/1254`);
 const a_Product = Model.attribute('label.product.id.name').localIdentifier('ProductName');
 //const CompuSci = Model.attribute([`/gdc/md/${projectId}/obj/949/elements?id=168279`]);
 const a_StageName = Model.attribute('label.stage.name.stagename').localIdentifier('StageName');
@@ -316,6 +318,8 @@ const filterActivityRestricted_LessThanOrEqualTo =
         }
     }
 };
+
+
 const s_sortbyStageNameTotal =
 {
     attributeSortItem: {
@@ -328,19 +332,39 @@ const s_sortbyStageNameTotal =
 const s_sortbyProductTotal =
 {
     attributeSortItem: {
+        aggregation: 'sum',
         direction: 'desc',
-        attributeIdentifier: 'ProductName',
-        aggregation: 'sum'
+        attributeIdentifier: 'ProductName'
+        
     }
 };
-const s_sortonPivotTable = [
-    {
-      attributeSortItem: {
-        attributeIdentifier: 'ProductName',
-        direction: 'desc'
-      }
+const s_sortonProductDesc = Model.attributeSortItem('ProductName','desc');
+
+const s_sortByAmountGrammarPlusDesc = Model.measureSortItem('Amount','desc')
+.attributeLocators({
+    attributeIdentifier: 'ProductName',
+    element: `/gdc/md/${projectId}/obj/949/elements?id=168284`
+});
+
+const s_sortByClosedBOPDescWithDepartment = Model.measureSortItem('ClosedBOP','desc')
+.attributeLocators({
+    attributeIdentifier: 'Department',
+    element: `/gdc/md/${projectId}/obj/1026/elements?id=1226`
+});
+
+const s_sortByAmountDesc = Model.measureSortItem('Amount','desc');
+const s_sortByClosedBOPDesc = Model.measureSortItem('ClosedBOP','desc');
+
+const s_sortByYearClosedAsc = Model.attributeSortItem('YearClosed','asc');
+const s_sortByYearSnapshotDesc = Model.attributeSortItem('YearSnapshot','desc');
+
+const s_sortByYearClosedSumClosedBOP = {
+    attributeSortItem: {
+        direction: 'desc',   // or 'desc',
+        attributeIdentifier: 'StageName',
+        aggregation: 'avg' // Optional;
     }
-  ];
+};
 
 const t_totalsPivotTable =
 {
@@ -349,26 +373,202 @@ const t_totalsPivotTable =
     attributeIdentifier: 'StageName'
 };
 
+// add more totals in pivot table
+const t_parentTotalsOnPivotTable = [
+    {
+        measureIdentifier: 'Amount',
+        type: 'sum',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'max',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'min',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'avg',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'med',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'nat',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'sum',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'max',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'min',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'avg',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'med',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'nat',
+        attributeIdentifier: 'YearClosed'
+    }
+];
+
+const t_childTotalsOnPivotTable = [
+    {
+        measureIdentifier: 'Amount',
+        type: 'sum',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'max',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'min',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'avg',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'med',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'nat',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'sum',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'max',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'min',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'avg',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'med',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'ClosedBOP',
+        type: 'nat',
+        attributeIdentifier: 'StageName'
+    }
+];
+
+const t_bothParentandChildTotalsOnPivotTable = [
+    {
+        measureIdentifier: 'Amount',
+        type: 'sum',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'max',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'min',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'avg',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'med',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'nat',
+        attributeIdentifier: 'StageName'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'sum',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'max',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'min',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'avg',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'med',
+        attributeIdentifier: 'YearClosed'
+    },
+    {
+        measureIdentifier: 'Amount',
+        type: 'nat',
+        attributeIdentifier: 'YearClosed'
+    }
+];
+
 //Set protected attribute
 const a_Opportunity = Model.attribute('label.opportunity.id.name').localIdentifier('Opportunity');
 //Set masked for attribute
 const a_Priority = Model.attribute('label.activity.priority').localIdentifier('Priority ');
 
-const s_sortByClosedBOPDescWithDepartment = Model.measureSortItem('ClosedBOP','desc')
-.attributeLocators({
-    attributeIdentifier: 'Department',
-    element: `/gdc/md/${projectId}/obj/1026/elements?id=1226`
-});
 
-const s_sortByClosedBOPDesc = Model.measureSortItem('ClosedBOP','desc');
-const s_sortByYearClosed = Model.attributeSortItem('YearClosed','asc');
-const s_sortByYearClosedSumClosedBOP = {
-    attributeSortItem: {
-        direction: 'desc',   // or 'desc',
-        attributeIdentifier: 'StageName',
-        aggregation: 'avg' // Optional;
-    }
-};
 
 export default {
     backendUrlForInfo,
@@ -451,12 +651,17 @@ export default {
     m_ClosedBOP,
     m_CountProduct,
     m_MinAmount,
-    t_totalsPivotTable,
+    t_parentTotalsOnPivotTable,
+    t_childTotalsOnPivotTable,
+    t_bothParentandChildTotalsOnPivotTable,
     s_sortByClosedBOPDesc,
     s_sortbyStageNameTotal,
     s_sortbyProductTotal,
-    s_sortonPivotTable,
+    s_sortonProductDesc,
+    s_sortByAmountDesc,
+    s_sortByAmountGrammarPlusDesc,
     s_sortByClosedBOPDescWithDepartment,
-    s_sortByYearClosed,
+    s_sortByYearClosedAsc,
+    s_sortByYearSnapshotDesc,
     s_sortByYearClosedSumClosedBOP
 };

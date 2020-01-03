@@ -187,7 +187,7 @@ storiesOf('Filter', module)
                     <AreaChart
                         projectId={fixtures.projectId}
                         measures={[fixtures.m_Amount]}
-                        viewBy={fixtures.a_Account}
+                        viewBy={fixtures.a_Activity}
                         stackBy={fixtures.a_StageName}
                         filters={[fixtures.filterAmount_GreaterThan]}
                     />  

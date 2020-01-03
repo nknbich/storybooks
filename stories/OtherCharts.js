@@ -1,9 +1,11 @@
+//ntthuong
 import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
 import { Headline, ScatterPlot, BubbleChart, PieChart, DonutChart, Treemap, Heatmap, PivotTable } from '@gooddata/react-components';
 import fixtures from '../src/data/fixtures';
+import { AreaChart } from '@gooddata/react-components';
 const WRAPPER_STYLE = { width: 1000, height: 500 };
 storiesOf('Other Charts', module)
     .add('Headline', () => (
@@ -25,6 +27,15 @@ storiesOf('Other Charts', module)
             projectId={fixtures.projectId}
             primaryMeasure={fixtures.m_ClosedBOP}
             secondaryMeasure={fixtures.m_ClosedEOP}
+        />
+<h1>check area </h1>
+        <AreaChart
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            //rows={[fixtures.a_Product]}
+            viewBy={fixtures.a_Product}
+            
+            sortBy={[fixtures.s_sortbyProductTotal]}
         />
     </div>
         
@@ -307,47 +318,153 @@ storiesOf('Other Charts', module)
             measures={[fixtures.m_ClosedBOP]}
             rows={[fixtures.a_YearClosed]}
             columns={[fixtures.a_Product]}
-            config={{
-                dataLabels: {
-                    visible: true
-                }
-            }}
+            
         />
         <h1>pivot table 1M,only rows</h1>
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
             rows={[fixtures.a_YearClosed]}
-            columns={[fixtures.a_Product]}
-            config={{
-                dataLabels: {
-                    visible: true
-                }
-            }}
+            //columns={[fixtures.a_Product]}
+            
         />
         <h1>pivot table 1M,only columns</h1>
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
-            rows={[fixtures.a_YearClosed]}
+            //rows={[fixtures.a_YearClosed]}
             columns={[fixtures.a_Product]}
-            config={{
-                dataLabels: {
-                    visible: true
-                }
-            }}
+            
         />
         <h1>pivot table many measures, rows, columns</h1>
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP, fixtures.m_Amount, fixtures.m_ClosedEOP, fixtures.m_SnapshotBOP]}
+            rows={[fixtures.a_YearClosed, fixtures.a_Account]}
+            columns={[fixtures.a_Product, fixtures.a_Department]}
+            
+        />
+        <h1>Totals on pivot table </h1>
+        <h1>Parent totals in pivot table many measures, rows, columns</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
             rows={[fixtures.a_YearClosed, fixtures.a_StageName]}
             columns={[fixtures.a_Product, fixtures.a_Department]}
-            config={{
-                dataLabels: {
-                    visible: true
+            filters={[fixtures.relativeDateYear, fixtures.filterStageNameNegative]}
+            totals={fixtures.t_parentTotalsOnPivotTable}
+        />
+        <h1>Child totals in pivot table many measures, rows, columns</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed, fixtures.a_StageName]}
+            columns={[fixtures.a_Product, fixtures.a_Department]}
+            filters={[fixtures.relativeDateYear, fixtures.filterStageNameInterestShortList]}
+            totals={fixtures.t_childTotalsOnPivotTable}
+     
+        />
+        <h1>Both parent and child totals in pivot table many measures, rows, columns, filter 2012 - Interest, ShortList</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed, fixtures.a_StageName]}
+            columns={[fixtures.a_Product, fixtures.a_Department]}
+            filters={[fixtures.relativeDateYear, fixtures.filterStageNameInterestShortList, fixtures.filterProductExplorerGrammarPlus]}
+            totals={fixtures.t_bothParentandChildTotalsOnPivotTable}
+        />
+        <h1>Sorting on pivot table</h1>
+
+        <h1>pivot table 1M,only rows + sort by YearClosed asc</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed]}
+            
+            sortBy={[fixtures.s_sortByYearClosedAsc, fixtures.s_sortByAmountDesc]}
+        />
+        <h1>pivot table 1M,only rows + sort by Amount desc</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed]}
+            
+            sortBy={[fixtures.s_sortByAmountDesc]}
+        />
+
+        <h1>Sort on pivot table contain parent and child totals values + apply sort Product DESC</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed, fixtures.a_Product]}
+            columns={[fixtures.a_StageName, fixtures.a_Department]}
+            //filters={[fixtures.relativeDateYear, fixtures.filterStageNameInterestShortList]}
+            totals={fixtures.t_bothParentandChildTotalsOnPivotTable}
+            sortBy={[fixtures.s_sortonProductDesc]}
+        />
+        <h1>sort by measure locators Amount - Grammar Plus DESC</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed]}
+            columns={[fixtures.a_Product]}
+            
+            sortBy={[fixtures.s_sortByAmountGrammarPlusDesc]}
+        />
+
+        <h1>sort by attribute Product aggregation desc</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_StageName]}
+            columns={[fixtures.a_Product]}
+            
+            sortBy={[fixtures.s_sortbyProductTotal]}
+        />      
+
+        <h1>multiple sorting </h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_StageName, fixtures.a_YearClosed]}
+            columns={[fixtures.a_Product]}
+            
+            sortBy={[fixtures.s_sortbyStageNameTotal, fixtures.s_sortonProductDesc, fixtures.s_sortByAmountGrammarPlusDesc]}
+        /> 
+
+        <h1>Enable config aggregation on pivot table</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_Amount, fixtures.m_ClosedEOP]}
+            rows={[fixtures.a_Product]}
+            columns={[fixtures.a_YearClosed]}
+            config={ {
+                menu: {
+                    aggregations: true,
+                    aggregationsSubMenu: true
                 }
-            }}
+            }
+        }
+        />
+
+        <h1>Filter pivot table</h1>
+        <h1>Filter 2012 - Explorer + Grammar Plus</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed]}
+            columns={[fixtures.a_Product]}
+            filters={[fixtures.filterProductExplorerGrammarPlus, fixtures.relativeDateYear]}
+            
+        />
+        <h1>Filter Amount greater than 5000000</h1>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed]}
+            columns={[fixtures.a_Product]}
+            filters={[fixtures.filterAmount_GreaterThan]}
+            
         />
         </div>
     ));

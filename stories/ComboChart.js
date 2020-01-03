@@ -1,3 +1,4 @@
+//ntthuong
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
@@ -309,7 +310,7 @@ storiesOf('ComboChart/Column-Line', module)
         <ComboChart
             projectId={fixtures.projectId}
             primaryMeasures={[fixtures.m_ClosedBOP]}
-            viewBy={fixtures.a_Deparment}            
+            viewBy={fixtures.a_Account}            
         />
 
         <h1>Combo chart column only primary bucket and stack measures</h1>

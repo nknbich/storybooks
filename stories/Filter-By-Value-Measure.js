@@ -69,7 +69,7 @@ storiesOf('Filter by value measure', module)
             rows={[fixtures.a_Product, fixtures.a_StageName]}
             columns={[fixtures.a_Product]}
             totals={[fixtures.t_totalsPivotTable]}
-            sortBy={fixtures.s_sortonPivotTable}
+            sortBy={[fixtures.s_sortonProductDesc]}
             filters={[fixtures.filterAmount_LessThan]}
             drillableItems={[
                HeaderPredicateFactory.uriMatch(`/gdc/md/${fixtures.projectId}/obj/1279`)
@@ -397,7 +397,7 @@ storiesOf('Filter by value measure', module)
          <AreaChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount]}
-            viewBy={fixtures.a_Account}
+            viewBy={fixtures.a_Activity}
             stackBy={fixtures.a_StageName}
             filters={[fixtures.filterAmount_GreaterThan]}
          />

@@ -768,7 +768,7 @@ storiesOf('AreaChart', module)
     ))
     .add('Invalid case', () => (
         <div style={WRAPPER_STYLE}>
-            <h1>User SB with more measures</h1>
+            <h1>Use SB with more measures</h1>
             <h3>A. No VB, stackMeasuresToPercent</h3>
             <p>Still apply stack: left stacked to percent, right stacked</p>
             <p>x axis doesn't show label because don't have viewBy</p>
@@ -836,7 +836,7 @@ storiesOf('AreaChart', module)
             <AreaChart
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount]}
-            viewBy={fixtures.a_Account}
+            viewBy={fixtures.a_Activity}
             stackBy={fixtures.a_StageName}
             />
         </div>
