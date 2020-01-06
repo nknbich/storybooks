@@ -381,7 +381,7 @@ storiesOf('Other Charts', module)
             measures={[fixtures.m_Amount]}
             rows={[fixtures.a_YearClosed]}
             
-            sortBy={[fixtures.s_sortByYearClosedAsc, fixtures.s_sortByAmountDesc]}
+            sortBy={[fixtures.s_sortByYearClosedAsc]}
         />
         <h1>pivot table 1M,only rows + sort by Amount desc</h1>
         <PivotTable
@@ -391,8 +391,9 @@ storiesOf('Other Charts', module)
             
             sortBy={[fixtures.s_sortByAmountDesc]}
         />
-
+        
         <h1>Sort on pivot table contain parent and child totals values + apply sort Product DESC</h1>
+        <p>Child totals should be hidden and Product sorted desc</p>
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
@@ -420,24 +421,15 @@ storiesOf('Other Charts', module)
             columns={[fixtures.a_Product]}
             
             sortBy={[fixtures.s_sortbyProductTotal]}
-        />      
-
-        <h1>multiple sorting </h1>
-        <PivotTable
-            projectId={fixtures.projectId}
-            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
-            rows={[fixtures.a_StageName, fixtures.a_YearClosed]}
-            columns={[fixtures.a_Product]}
-            
-            sortBy={[fixtures.s_sortbyStageNameTotal, fixtures.s_sortonProductDesc, fixtures.s_sortByAmountGrammarPlusDesc]}
         /> 
-
+        
         <h1>Enable config aggregation on pivot table</h1>
         <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_Amount, fixtures.m_ClosedEOP]}
             rows={[fixtures.a_Product]}
             columns={[fixtures.a_YearClosed]}
+            sortBy={[fixtures.s_sortonProductDesc]}
             config={ {
                 menu: {
                     aggregations: true,
@@ -446,6 +438,25 @@ storiesOf('Other Charts', module)
             }
         }
         />
+
+        <h1>Edge cases not support sorting</h1>
+        <h3>sort on both YearClosed asc and Amount desc</h3>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_Amount]}
+            rows={[fixtures.a_YearClosed]}
+            
+            sortBy={[fixtures.s_sortByYearClosedAsc, fixtures.s_sortByAmountDesc]}
+        />
+        <h3>check multiple sorting - Amount Grammar Plus desc + StageName desc + Product desc aggregation</h3>
+        <PivotTable
+            projectId={fixtures.projectId}
+            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
+            rows={[fixtures.a_StageName, fixtures.a_YearClosed]}
+            columns={[fixtures.a_Product]}
+            
+            sortBy={[fixtures.s_sortByAmountGrammarPlusDesc, fixtures.s_sortbyStageNameTotal, fixtures.s_sortbyProductTotal]}
+        /> 
 
         <h1>Filter pivot table</h1>
         <h1>Filter 2012 - Explorer + Grammar Plus</h1>
