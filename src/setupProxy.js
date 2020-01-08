@@ -1,6 +1,6 @@
 const proxy = require('http-proxy-middleware');
 
-const HOST = 'staging3.intgdc.com';
+const HOST = 'staging2.intgdc.com';
 const URI = `https://${HOST}`;
 
 module.exports = function (app) {

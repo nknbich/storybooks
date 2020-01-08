@@ -3,19 +3,15 @@ import React, { Component } from "react";
 
 import { storiesOf } from "@storybook/react";
 import "@gooddata/react-components/styles/css/main.css";
-import { AreaChart, Headline, DonutChart, Treemap, ColumnChart, BarChart, LoadingComponent, ErrorComponent, ScatterPlot, BubbleChart, Heatmap, AttributeFilter } from '@gooddata/react-components';
+import {AttributeElements, Model, AreaChart, Headline, DonutChart, Treemap, ColumnChart, BarChart, LoadingComponent, ErrorComponent, ScatterPlot, BubbleChart, Heatmap, AttributeFilter } from '@gooddata/react-components';
 import fixtures from '../src/data/fixtures'; 
 //import "babel-polyfill";
-//support for datepicker
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import moment from "moment";
-//yarn add react-datepicker
-//yarn add moment
-
-import Select from "react-select";
-//yarn add react-select
-import Measure from "react-measure";
+import DatePicker from "react-datepicker"; //support for datepicker
+import "react-datepicker/dist/react-datepicker.css"; //support for datepicker
+import moment from "moment"; //support for datepicker
+import Select from "react-select"; //support for parent filter
+import "react-select/dist/react-select.css"; //must use version "react-select": "1.2.1"
+import Measure from "react-measure"; //support for responsive chart
 
 const WRAPPER_STYLE = { width: 1200, height: 400 };
 
@@ -521,7 +517,6 @@ class AttributeFilterIdentifierExample extends Component {
     }
 
     onApply = (filter) => {
-        console.log('AttributeFilterExample filter', filter);
 
         const isPositive = !!filter.in;
         const elementsProp = isPositive ? 'in' : 'notIn';
@@ -569,7 +564,6 @@ class AttributeFilterUriExample extends Component {
     }
 
     onApply = (filter) => {
-        console.log('AttributeFilterExample filter', filter);
 
         const isPositive = !!filter.in;
         const elementsProp = isPositive ? 'in' : 'notIn';
@@ -603,6 +597,178 @@ class AttributeFilterUriExample extends Component {
                     projectId={fixtures.projectId}
                     height={500}
                  />
+            </div>
+        );
+    }
+};
+
+class ParentFilterExample extends Component {
+    constructor(props) {
+        super(props);
+        this.onChangeHandlers = {};
+        this.renderFilter = this.renderFilter.bind(this);
+        this.state = {
+            stageFilterValues: [],
+            statusFilterValues: [],
+        };
+        this.handlers = {
+            stage: this.onStageChange,
+            status: this.onStatusChange,
+        };
+    }
+
+    onStageChange = stageFilterValues => {
+        this.setState({
+            stageFilterValues,
+        });
+    };
+
+    onStatusChange = statusFilterValues => {
+        this.setState({
+            statusFilterValues,
+        });
+    };
+
+    renderVisualization(stageFilterValues, statusFilterValues) {
+        const visFilters = [];
+
+        if (stageFilterValues.length) {
+            visFilters.push(
+                Model.positiveAttributeFilter(
+                    "label.stage.name.stagename",
+                    stageFilterValues.map(filter => filter.value),
+                ),
+            );
+        }
+        if (statusFilterValues.length) {
+            visFilters.push(
+                Model.positiveAttributeFilter(
+                    "label.stage.status",
+                    statusFilterValues.map(filter => filter.value),
+                ),
+            );
+        }
+
+        return (
+            <div style={{ height: 500 }}>
+                <BarChart
+                    measures={[fixtures.m_Amount]}
+                    viewBy={fixtures.a_StageName}
+                    filters={visFilters}
+                    projectId={fixtures.projectId}
+                    height={500}
+                />
+            </div>
+        );
+    }
+
+    renderFilter(key, displayFormIdentifier, filterValues, placeholder, options, onChange) {
+        return (
+            <AttributeElements
+                key={key}
+                identifier={displayFormIdentifier}
+                projectId={fixtures.projectId}
+                options={options}
+            >
+                {({ validElements, isLoading, error }) => {
+                    if (error) {
+                        return <div>{error}</div>;
+                    }
+                    const selectOptions = validElements
+                        ? validElements.items.map(item => ({
+                              label: item.element.title,
+                              value: item.element.uri,
+                          }))
+                        : [];
+                    return (
+                        <span
+                            style={{
+                                display: "inline-block",
+                                minWidth: "10em",
+                                verticalAlign: "middle",
+                            }}
+                        >
+                            <Select
+                                onChange={onChange}
+                                className={`s-select-${key}`}
+                                options={selectOptions}
+                                multi
+                                isLoading={isLoading}
+                                placeholder={placeholder}
+                                value={filterValues}
+                            />
+                        </span>
+                    );
+                }}
+            </AttributeElements>
+        );
+    }
+
+    render() {
+        const { stageFilterValues, statusFilterValues } = this.state;
+
+        // State (parent) filter
+        const stageFilter = this.renderFilter(
+            "stagename",
+            "label.stage.name.stagename",
+            stageFilterValues,
+            "all stages",
+            { limit: 20 },
+            this.onStageChange,
+        );
+
+        // City (child) filter
+        const statusOptions = { limit: 20 };
+        if (stageFilterValues.length) {
+            // parent value uris need to be surrounded by '[]' and separated by ','
+            const selectedParentItems = stageFilterValues
+                .map(parentItem => `[${parentItem.value}]`)
+                .join(", ");
+            const afm = {
+                attributes: [
+                    {
+                        displayForm: {
+                            identifier: "label.stage.status",
+                        },
+                        localIdentifier: "childAttribute",
+                    },
+                ],
+                filters: [
+                    {
+                        expression: {
+                            value:
+                                // parent attribute identifier surrounded by '{}'
+                                `({attr.stage.name}` +
+                                // selected parent values surrounded by '[]' and separated by ','
+                                ` IN (${selectedParentItems}))` +
+                                // attribute identifier of common attribute between parent
+                                // and child attributes surrounded by '{}'
+                                ` OVER {attr.stage.name}` +
+                                // child attribute identifier surrounded by '{}'
+                                ` TO {attr.stage.status}`,
+                        },
+                    },
+                ],
+            };
+            statusOptions.afm = afm;
+            console.log(afm);
+        }
+        const cityFilter = this.renderFilter(
+            "status",
+            "label.stage.status",
+            statusFilterValues,
+            "all status",
+            statusOptions,
+            this.onStatusChange,
+        );
+
+        return (
+            <div>
+                <span>Parent filter:&emsp;</span>
+                {stageFilter}
+                &emsp;and Children filter:&emsp; {cityFilter}
+                <hr className="separator" />
+                {this.renderVisualization(stageFilterValues, statusFilterValues)}
             </div>
         );
     }
@@ -666,5 +832,10 @@ storiesOf('Advance cases', module)
         <AttributeFilterIdentifierExample />
         <h1>B. Filter by Uri</h1>
         <AttributeFilterUriExample />
+        </div>    
+    ))
+    .add('ParentFilter', () => (
+        <div style={WRAPPER_STYLE}>
+        <ParentFilterExample />
         </div>    
     ));
