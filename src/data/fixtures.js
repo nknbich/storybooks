@@ -2,8 +2,8 @@ import { Model } from '@gooddata/react-components';
 
 const demoProject = {
     'https://secure.gooddata.com': '',
-    'https://staging3.intgdc.com': 'juobzgs3d6afugtvyp66t537io1uw15f', //pbqw1946hsb7q22oqb1xuzma3s75kltx
-    'https://staging2.intgdc.com': 'ldj9ovlpy1e5hh7ztw8phsmexuukuw78', //d8qmrg8qi02th0pdyxi0jg7ekrv9beqh
+    'https://staging3.intgdc.com': 'qxcxp768fpuythmmt28va9p6oz0y9c41', //pbqw1946hsb7q22oqb1xuzma3s75kltx
+    'https://staging2.intgdc.com': 'cxmrlinh0gcspntxsytkwcky7gkay4so', //d8qmrg8qi02th0pdyxi0jg7ekrv9beqh
     'https://staging.intgdc.com': 'uaumkml6k5h0ltatq2y5pjohhz3foylo' //egbqln7774to906vx4pfo6ear7w0ifr3
 };
 const backendUrl = "https://staging2.intgdc.com"; // eslint-disable-line no-undef
@@ -144,6 +144,39 @@ const a_StartFrom = Model.attribute('startfrom.aag81lMifn6q').localIdentifier('Y
 const a_YearClosed = Model.attribute('closed.aag81lMifn6q').localIdentifier('YearClosed');
 const a_YearSnapshot = Model.attribute('snapshot.aag81lMifn6q').localIdentifier('YearSnapshot');
 
+//geo pushpin too large
+const g_Latlon1 = Model.attribute(`/gdc/md/${projectId}/obj/77307`);
+
+//geo pushpin
+const g_Latlon = Model.attribute(`/gdc/md/${projectId}/obj/77094`);
+const a_Zip = Model.attribute(`/gdc/md/${projectId}/obj/77080`);
+const a_City = Model.attribute(`/gdc/md/${projectId}/obj/77082`);
+const a_State = Model.attribute(`/gdc/md/${projectId}/obj/77084`);
+const a_Timezone = Model.attribute(`/gdc/md/${projectId}/obj/77090`);
+const a_DST = Model.attribute(`/gdc/md/${projectId}/obj/77092`);
+
+const m_SumPopulation = Model.measure(`/gdc/md/${projectId}/obj/77185`).localIdentifier('SumPopulation');
+const m_PopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77185`).ratio().localIdentifier('PopulationRatio')
+const m_MinPopulation = Model.measure(`/gdc/md/${projectId}/obj/77186`).localIdentifier('MinPopulation');
+const m_MaxPopulation = Model.measure(`/gdc/md/${projectId}/obj/77187`).localIdentifier('MaxPopulation');
+const m_SumLaBorPopulation = Model.measure(`/gdc/md/${projectId}/obj/77197`).localIdentifier('SumLaBorPopulation');
+const m_MinLaBorPopulation = Model.measure(`/gdc/md/${projectId}/obj/77198`).localIdentifier('MinLaBorPopulation');
+const m_Sum_SumPopulation_MinPopulation = Model.arithmeticMeasure(['SumPopulation', 'MinPopulation'], 'sum').alias('Sum_SumPopulation_MinPopulation');
+const m_POP_SumPopulation = Model.popMeasure('SumPopulation', `/gdc/md/${projectId}/obj/513`)
+    .localIdentifier('POP_SumPopulation')
+    .alias('POP SumPopulation');
+const m_PP_SumPopulation = Model.previousPeriodMeasure('SumDayToClose', [{ dataSet: `/gdc/md/${projectId}/obj/520`, periodsAgo: 1 }])
+    .localIdentifier('PP_SumPopulation')
+    .alias('PP SumPopulation');
+
+const filterCity = Model.positiveAttributeFilter(`/gdc/md/${projectId}/obj/77082`, [
+    `/gdc/md/${projectId}/obj/77081/elements?id=475`,
+    `/gdc/md/${projectId}/obj/77081/elements?id=312`]);
+const filterState = Model.positiveAttributeFilter('label.geopushpin.state', ["VI", "NY", "PR"], true);
+const filterTimezoneNegative = Model.negativeAttributeFilter('label.geopushpin.timezone', ["-4"], true);
+const filterDSTNegative = Model.negativeAttributeFilter(`/gdc/md/${projectId}/obj/77092`, [`/gdc/md/${projectId}/obj/77091/elements?id=321`]);
+const filterabsoluteYearSnapshot = Model.absoluteDateFilter('snapshot.dataset.dt', '2019-03-13', '2019-03-14');
+const filterrelativeYearSnapshot = Model.relativeDateFilter('snapshot.dataset.dt', 'GDC.time.date', -2, 0);
 
 const filterAmount_GreaterThan = {
     measureValueFilter: {
@@ -222,7 +255,7 @@ const filterAmountNegative_NotEqualTo =
             localIdentifier: "AmountNegative"
         },
         condition: {
-            range: {
+            comparison: {
                 operator: "NOT_EQUAL_TO",
                 value: 57025
             }
@@ -297,7 +330,7 @@ const filterAmountNullFormat_GreaterThanOrEqualTo =
             localIdentifier: "Amount"
         },
         condition: {
-            range: {
+            comparison: {
                 operator: "GREATER_THAN_OR_EQUAL_TO",
                 value: 5000000
             }
@@ -311,7 +344,7 @@ const filterActivityRestricted_LessThanOrEqualTo =
             localIdentifier: "ActivityRestricted"
         },
         condition: {
-            range: {
+            comparison: {
                 operator: "LESS_THAN_OR_EQUAL_TO",
                 value: 5000000
             }
@@ -319,7 +352,63 @@ const filterActivityRestricted_LessThanOrEqualTo =
     }
 };
 
-
+const filterSumPopulation_LessThanOrEqualTo =
+{
+    measureValueFilter: {
+        measure: {
+            localIdentifier: "SumPopulation"
+        },
+        condition: {
+            comparison: {
+                operator: "LESS_THAN_OR_EQUAL_TO",
+                value: 50
+            }
+        }
+    }
+};
+const filterMinPopulation_LessThanOrEqualTo =
+{
+    measureValueFilter: {
+        measure: {
+            localIdentifier: "MinPopulation"
+        },
+        condition: {
+            comparison: {
+                operator: "LESS_THAN_OR_EQUAL_TO",
+                value: -10
+            }
+        }
+    }
+};
+const filterSumPopulation_Between =
+{
+    measureValueFilter: {
+        measure: {
+            localIdentifier: "SumPopulation"
+        },
+        condition: {
+            range: {
+                operator: "BETWEEN",
+                from: 0,
+                to: 50
+            }
+        }
+    }
+};
+const filterSumPopulation_Equal =
+{
+    measureValueFilter: {
+        measure: {
+            localIdentifier: "SumPopulation"
+        },
+        condition: {
+            comparison: {
+                operator: "EQUAL_TO",
+                value: 6
+            }
+        }
+    }
+};
 const s_sortbyStageNameTotal =
 {
     attributeSortItem: {
@@ -335,28 +424,28 @@ const s_sortbyProductTotal =
         aggregation: 'sum',
         direction: 'desc',
         attributeIdentifier: 'ProductName'
-        
+
     }
 };
-const s_sortonProductDesc = Model.attributeSortItem('ProductName','desc');
+const s_sortonProductDesc = Model.attributeSortItem('ProductName', 'desc');
 
-const s_sortByAmountGrammarPlusDesc = Model.measureSortItem('Amount','desc')
-.attributeLocators({
-    attributeIdentifier: 'ProductName',
-    element: `/gdc/md/${projectId}/obj/949/elements?id=168284`
-});
+const s_sortByAmountGrammarPlusDesc = Model.measureSortItem('Amount', 'desc')
+    .attributeLocators({
+        attributeIdentifier: 'ProductName',
+        element: `/gdc/md/${projectId}/obj/949/elements?id=168284`
+    });
 
-const s_sortByClosedBOPDescWithDepartment = Model.measureSortItem('ClosedBOP','desc')
-.attributeLocators({
-    attributeIdentifier: 'Department',
-    element: `/gdc/md/${projectId}/obj/1026/elements?id=1226`
-});
+const s_sortByClosedBOPDescWithDepartment = Model.measureSortItem('ClosedBOP', 'desc')
+    .attributeLocators({
+        attributeIdentifier: 'Department',
+        element: `/gdc/md/${projectId}/obj/1026/elements?id=1226`
+    });
 
-const s_sortByAmountDesc = Model.measureSortItem('Amount','desc');
-const s_sortByClosedBOPDesc = Model.measureSortItem('ClosedBOP','desc');
+const s_sortByAmountDesc = Model.measureSortItem('Amount', 'desc');
+const s_sortByClosedBOPDesc = Model.measureSortItem('ClosedBOP', 'desc');
 
-const s_sortByYearClosedAsc = Model.attributeSortItem('YearClosed','asc');
-const s_sortByYearSnapshotDesc = Model.attributeSortItem('YearSnapshot','desc');
+const s_sortByYearClosedAsc = Model.attributeSortItem('YearClosed', 'asc');
+const s_sortByYearSnapshotDesc = Model.attributeSortItem('YearSnapshot', 'desc');
 
 const s_sortByYearClosedSumClosedBOP = {
     attributeSortItem: {
@@ -663,5 +752,31 @@ export default {
     s_sortByClosedBOPDescWithDepartment,
     s_sortByYearClosedAsc,
     s_sortByYearSnapshotDesc,
-    s_sortByYearClosedSumClosedBOP
+    s_sortByYearClosedSumClosedBOP,
+    g_Latlon,
+    m_SumPopulation,
+    m_MinPopulation,
+    m_MaxPopulation,
+    a_City,
+    a_Zip,
+    a_DST,
+    a_State,
+    a_Timezone,
+    filterSumPopulation_LessThanOrEqualTo,
+    filterMinPopulation_LessThanOrEqualTo,
+    filterCity,
+    filterSumPopulation_Between,
+    filterSumPopulation_Equal,
+    m_SumLaBorPopulation,
+    m_MinLaBorPopulation,
+    m_Sum_SumPopulation_MinPopulation,
+    filterTimezoneNegative,
+    filterabsoluteYearSnapshot,
+    filterrelativeYearSnapshot,
+    filterDSTNegative,
+    filterState,
+    g_Latlon1,
+    m_POP_SumPopulation,
+    m_PP_SumPopulation,
+    m_PopulationRatio
 };

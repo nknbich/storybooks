@@ -401,7 +401,7 @@ class ErrorComponentExample extends Component {
                 icon="icon-ghost"
                 className="s-default-Error"
                 message="This is an Custom Error"
-                description="â€¦with description."
+                description="…with description."
                 height={200}
             />
         );
