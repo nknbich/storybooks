@@ -3,8 +3,8 @@ import React, { Component } from "react";
 
 import { storiesOf } from "@storybook/react";
 import "@gooddata/react-components/styles/css/main.css";
-import {AttributeElements, Model, AreaChart, Headline, DonutChart, Treemap, ColumnChart, BarChart, LoadingComponent, ErrorComponent, ScatterPlot, BubbleChart, Heatmap, AttributeFilter } from '@gooddata/react-components';
-import fixtures from '../src/data/fixtures'; 
+import { HeaderPredicateFactory, GeoPushpinChart, AttributeElements, Model, AreaChart, Headline, DonutChart, Treemap, ColumnChart, BarChart, LoadingComponent, ErrorComponent, ScatterPlot, BubbleChart, Heatmap, AttributeFilter } from '@gooddata/react-components';
+import fixtures from '../src/data/fixtures';
 //import "babel-polyfill";
 import DatePicker from "react-datepicker"; //support for datepicker
 import "react-datepicker/dist/react-datepicker.css"; //support for datepicker
@@ -14,7 +14,21 @@ import "react-select/dist/react-select.css"; //must use version "react-select": 
 import Measure from "react-measure"; //support for responsive chart
 
 const WRAPPER_STYLE = { width: 1200, height: 400 };
+let exportResult: any;
 
+function onExportReady(execution: any) {
+    exportResult = execution;
+}
+
+async function doExport() {
+    const result = await exportResult({
+        format: 'xlsx',   //'xlsx'
+        includeFilterContext: true,
+        mergeHeaders: true
+    });
+    //downloadFile(result.uri);
+    window.open(result.uri);
+}
 
 //datepicker
 const dateFormat = "YYYY-MM-DD";
@@ -50,7 +64,7 @@ class DatePickerExample extends Component {
             error: null,
         };
         newState[prop] = value;
-        this.setState(newState);        
+        this.setState(newState);
     }
 
     onLoadingChanged(...params) {
@@ -66,16 +80,16 @@ class DatePickerExample extends Component {
     render() {
         const { from, to, error } = this.state;
         const filters = [
-                {
-                    absoluteDateFilter: {
-                        dataSet: {
-                            identifier: 'closed.dataset.dt',
-                        },
-                        from: moment(from).format("YYYY-MM-DD"),
-                        to: moment(to).format("YYYY-MM-DD"),
+            {
+                absoluteDateFilter: {
+                    dataSet: {
+                        identifier: 'closed.dataset.dt',
                     },
+                    from: moment(from).format("YYYY-MM-DD"),
+                    to: moment(to).format("YYYY-MM-DD"),
                 },
-            ];
+            },
+        ];
         return (
             <div className="s-date-picker">
                 <style jsx="true">{`
@@ -105,7 +119,7 @@ class DatePickerExample extends Component {
                     viewBy={[fixtures.a_YearClosed]}
                     config={{
                         legend: {
-                        enabled: false // disable the original legend implementation
+                            enabled: false // disable the original legend implementation
                         }
                     }}
                     filters={filters}
@@ -187,7 +201,7 @@ class CustomLegendMoreMeasures extends CustomLegendCore {
             <a>
                 <h1>Legend from more measures</h1>
                 {this.renderCustomLegend()}
-                <AreaChart
+                {/* <AreaChart
                         projectId={fixtures.projectId}
                         measures={[fixtures.m_SumDayToClose, fixtures.m_OppFirstSnapshot]}
                         viewBy={[fixtures.a_Product]}
@@ -199,7 +213,25 @@ class CustomLegendMoreMeasures extends CustomLegendCore {
                         }}
                         onError={this.onError}
                         onLegendReady={this.onLegendReady}
-                />
+                /> */}
+                <div style={{ height: 1000, border: "solid 2px black" }}>
+                    <GeoPushpinChart
+                        projectId={fixtures.projectId}
+                        location={fixtures.g_Latlon}
+                        size={fixtures.m_SumPopulation}
+                        color={fixtures.m_MinPopulation}
+                        segmentBy={fixtures.a_State}
+                        config={{
+                            legend: {
+                                enabled: false,
+                            },
+                            mapboxToken: "pk.eyJ1IjoiaW1udXR6IiwiYSI6ImNrMHAxY2UxZzBnc2EzZG11YmVhd2dubG0ifQ.bUTN7ceAHq6kVooe3MKgqg"
+                        }}
+                        onLoadingChanged={this.onLoadingChanged}
+                        onError={this.onError}
+                        onLegendReady={this.onLegendReady}
+                    />
+                </div>
             </a>
         );
     }
@@ -212,18 +244,18 @@ class CustomLegendStackBy extends CustomLegendCore {
                 <h1>Legend from Stack By</h1>
                 {this.renderCustomLegend()}
                 <ColumnChart
-                        projectId={fixtures.projectId}
-                        measures={[fixtures.m_SnapshotBOP]}
-                        viewBy={[fixtures.a_Product]}
-                        stackBy={fixtures.a_StageName}
-                        onLoadingChanged={this.onLoadingChanged}
-                        config={{
-                            legend: {
-                                enabled: false,
-                            },
-                        }}
-                        onError={this.onError}
-                        onLegendReady={this.onLegendReady}
+                    projectId={fixtures.projectId}
+                    measures={[fixtures.m_SnapshotBOP]}
+                    viewBy={[fixtures.a_Product]}
+                    stackBy={fixtures.a_StageName}
+                    onLoadingChanged={this.onLoadingChanged}
+                    config={{
+                        legend: {
+                            enabled: false,
+                        },
+                    }}
+                    onError={this.onError}
+                    onLegendReady={this.onLegendReady}
                 />
             </a>
         );
@@ -401,7 +433,7 @@ class ErrorComponentExample extends Component {
                 icon="icon-ghost"
                 className="s-default-Error"
                 message="This is an Custom Error"
-                description="…with description."
+                description="ï¿½with description."
                 height={200}
             />
         );
@@ -437,7 +469,7 @@ class ResponsiveExampleNewest extends Component {
                 </button>
 
                 <hr className="separator" />
-                
+
                 <div style={{ width, height }} className="s-resizable-vis">
                     <Measure client>
                         {({ measureRef, contentRect }) => {
@@ -452,18 +484,18 @@ class ResponsiveExampleNewest extends Component {
                             return (
                                 <div style={{ width: "100%", height: "100%" }} ref={measureRef}>
                                     <BarChart
-                                    width={usedWidth}
-                                    height={usedHeight}
-                                    projectId={fixtures.projectId}
-                                    measures={[fixtures.m_SumDayToClose]}
-                                    viewBy={[fixtures.a_Product]}
+                                        width={usedWidth}
+                                        height={usedHeight}
+                                        projectId={fixtures.projectId}
+                                        measures={[fixtures.m_SumDayToClose]}
+                                        viewBy={[fixtures.a_Product]}
                                     />
                                 </div>
                             );
                         }}
                     </Measure>
                 </div>
-                
+
             </div>
         );
     }
@@ -487,19 +519,19 @@ class ResponsiveExampleOlder extends Component {
                 <button onClick={() => this.setState({ size: [800, 200] })} className="button button-secondary s-resize-800x200">800x200</button>
 
                 <hr className="separator" />
-                
+
                 <div style={{ width, height }} className="s-resizable-vis">
                     <Measure>
                         {dimensions => (
                             <div style={{ width: '100%', height: '100%' }}>
-                                    <BarChart
+                                <BarChart
                                     projectId={fixtures.projectId}
                                     measures={[fixtures.m_SumDayToClose]}
                                     viewBy={[fixtures.a_Product]}
                                     width={dimensions.width}
                                     height={dimensions.height}
-                                    />
-                                </div>
+                                />
+                            </div>
                         )}
                     </Measure>
                 </div>
@@ -526,7 +558,7 @@ class AttributeFilterIdentifierExample extends Component {
                 displayForm: {
                     identifier: filter.id
                 },
-                [elementsProp]: filter[elementsProp].map(element => (`/gdc/md/${fixtures.projectId}/obj/1095/elements?id=${element}`))
+                [elementsProp]: filter[elementsProp].map(element => (`/gdc/md/${fixtures.projectId}/obj/77081/elements?id=${element}`))
             }
         }];
 
@@ -538,18 +570,24 @@ class AttributeFilterIdentifierExample extends Component {
         return (
             <div>
                 <AttributeFilter
-                    identifier="label.stage.name.stagename"
+                    identifier="label.geopushpin.city"
                     projectId={fixtures.projectId}
                     fullscreenOnMobile={false}
                     onApply={this.onApply}
                 />
-                <BarChart
-                    measures={[fixtures.m_ClosedBOP]}
-                    viewBy={fixtures.a_StageName}
-                    filters={filters}
-                    projectId={fixtures.projectId}
-                    height={500}
-                 />
+                <div style={{ height: 1000, border: "solid 2px black" }}>
+                    <GeoPushpinChart
+                        projectId={fixtures.projectId}
+                        location={fixtures.g_Latlon}
+                        size={fixtures.m_SumPopulation}
+                        color={fixtures.m_MinPopulation}
+                        segmentBy={fixtures.a_City}
+                        filters={filters}
+                        onExportReady={onExportReady}
+                        config={{ mapboxToken: "pk.eyJ1IjoiaW1udXR6IiwiYSI6ImNrMHAxY2UxZzBnc2EzZG11YmVhd2dubG0ifQ.bUTN7ceAHq6kVooe3MKgqg" }}
+                    />
+                </div>
+                <button style={{ padding: "15px 32px" }} onClick={doExport}>Export</button>
             </div>
         );
     }
@@ -573,7 +611,7 @@ class AttributeFilterUriExample extends Component {
                 displayForm: {
                     uri: filter.id
                 },
-                [elementsProp]: filter[elementsProp].map(element => (`/gdc/md/${fixtures.projectId}/obj/1095/elements?id=${element}`))
+                [elementsProp]: filter[elementsProp].map(element => (`/gdc/md/${fixtures.projectId}/obj/77081/elements?id=${element}`))
             }
         }];
 
@@ -585,18 +623,24 @@ class AttributeFilterUriExample extends Component {
         return (
             <div>
                 <AttributeFilter
-                    uri={`/gdc/md/${fixtures.projectId}/obj/1805`}
+                    uri={`/gdc/md/${fixtures.projectId}/obj/77082`}
                     projectId={fixtures.projectId}
                     fullscreenOnMobile={false}
                     onApply={this.onApply}
                 />
-                <BarChart
-                    measures={[fixtures.m_ClosedBOP]}
-                    viewBy={fixtures.a_StageName}
-                    filters={filters}
-                    projectId={fixtures.projectId}
-                    height={500}
-                 />
+                <div style={{ height: 1000, border: "solid 2px black" }}>
+                    <GeoPushpinChart
+                        projectId={fixtures.projectId}
+                        location={fixtures.g_Latlon}
+                        size={fixtures.m_SumPopulation}
+                        color={fixtures.m_MinPopulation}
+                        segmentBy={fixtures.a_City}
+                        filters={filters}
+                        onExportReady={onExportReady}
+                        config={{ mapboxToken: "pk.eyJ1IjoiaW1udXR6IiwiYSI6ImNrMHAxY2UxZzBnc2EzZG11YmVhd2dubG0ifQ.bUTN7ceAHq6kVooe3MKgqg" }}
+                    />
+                </div>
+                <button style={{ padding: "15px 32px" }} onClick={doExport}>Export</button>
             </div>
         );
     }
@@ -635,7 +679,7 @@ class ParentFilterExample extends Component {
         if (stageFilterValues.length) {
             visFilters.push(
                 Model.positiveAttributeFilter(
-                    "label.stage.name.stagename",
+                    "label.geopushpin.latlon",
                     stageFilterValues.map(filter => filter.value),
                 ),
             );
@@ -643,21 +687,26 @@ class ParentFilterExample extends Component {
         if (statusFilterValues.length) {
             visFilters.push(
                 Model.positiveAttributeFilter(
-                    "label.stage.status",
+                    "label.comp.qegnBZ9",
                     statusFilterValues.map(filter => filter.value),
                 ),
             );
         }
 
         return (
-            <div style={{ height: 500 }}>
-                <BarChart
-                    measures={[fixtures.m_Amount]}
-                    viewBy={fixtures.a_StageName}
-                    filters={visFilters}
-                    projectId={fixtures.projectId}
-                    height={500}
-                />
+            <div style={{ height: 1000 }}>
+                <div style={{ height: 600, border: "solid 2px black" }}>
+                    <GeoPushpinChart
+                        projectId={fixtures.projectId}
+                        location={fixtures.g_Latlon}
+                        size={fixtures.m_SumPopulation}
+                        color={fixtures.m_MinPopulation}
+                        config={{ mapboxToken: "pk.eyJ1IjoiaW1udXR6IiwiYSI6ImNrMHAxY2UxZzBnc2EzZG11YmVhd2dubG0ifQ.bUTN7ceAHq6kVooe3MKgqg" }}
+                        filters={visFilters}
+                        onExportReady={onExportReady}
+                    />
+                </div>
+                <button style={{ padding: "15px 32px" }} onClick={doExport}>Export</button>
             </div>
         );
     }
@@ -676,9 +725,9 @@ class ParentFilterExample extends Component {
                     }
                     const selectOptions = validElements
                         ? validElements.items.map(item => ({
-                              label: item.element.title,
-                              value: item.element.uri,
-                          }))
+                            label: item.element.title,
+                            value: item.element.uri,
+                        }))
                         : [];
                     return (
                         <span
@@ -709,11 +758,11 @@ class ParentFilterExample extends Component {
 
         // State (parent) filter
         const stageFilter = this.renderFilter(
-            "stagename",
-            "label.stage.name.stagename",
+            "latlon",
+            "label.geopushpin.latlon",
             stageFilterValues,
-            "all stages",
-            { limit: 20 },
+            "all latlons",
+            { limit: 200 },
             this.onStageChange,
         );
 
@@ -728,7 +777,7 @@ class ParentFilterExample extends Component {
                 attributes: [
                     {
                         displayForm: {
-                            identifier: "label.stage.status",
+                            identifier: "label.comp.qegnBZ9",
                         },
                         localIdentifier: "childAttribute",
                     },
@@ -738,14 +787,14 @@ class ParentFilterExample extends Component {
                         expression: {
                             value:
                                 // parent attribute identifier surrounded by '{}'
-                                `({attr.stage.name}` +
+                                `({attr.geopushpin.latlon}` +
                                 // selected parent values surrounded by '[]' and separated by ','
                                 ` IN (${selectedParentItems}))` +
                                 // attribute identifier of common attribute between parent
                                 // and child attributes surrounded by '{}'
-                                ` OVER {attr.stage.name}` +
+                                ` OVER {attr.geopushpin.latlon}` +
                                 // child attribute identifier surrounded by '{}'
-                                ` TO {attr.stage.status}`,
+                                ` TO {attr.comp.qegnBZ9}`,
                         },
                     },
                 ],
@@ -754,10 +803,10 @@ class ParentFilterExample extends Component {
             console.log(afm);
         }
         const cityFilter = this.renderFilter(
-            "status",
-            "label.stage.status",
+            "CA",
+            "label.comp.qegnBZ9",
             statusFilterValues,
-            "all status",
+            "all CAs",
             statusOptions,
             this.onStatusChange,
         );
@@ -776,66 +825,66 @@ class ParentFilterExample extends Component {
 
 storiesOf('Advance cases', module)
     .add('Date picker', () => (
-    <div style={WRAPPER_STYLE}>
-        <h1>Date picker</h1>
-        <DatePickerExample />
-    </div>    
+        <div style={WRAPPER_STYLE}>
+            <h1>Date picker</h1>
+            <DatePickerExample />
+        </div>
     ))
     .add('Custom Legend', () => (
-    <div style={WRAPPER_STYLE}>
-        <CustomLegendMoreMeasures />
-        <CustomLegendStackBy />
-        <CustomLegendHeatMap />
-        <CustomLegendBubbleChart />
-        <CustomLegendScatterPlot />
-        <CustomLegendTreemap />
-        <CustomLegendDonutChart />
-        <CustomLegendHeadline />
-    </div>    
+        <div style={WRAPPER_STYLE}>
+            <CustomLegendMoreMeasures />
+            <CustomLegendStackBy />
+            <CustomLegendHeatMap />
+            <CustomLegendBubbleChart />
+            <CustomLegendScatterPlot />
+            <CustomLegendTreemap />
+            <CustomLegendDonutChart />
+            <CustomLegendHeadline />
+        </div>
     ))
     .add('Loading and Error Components', () => (
-    <div style={WRAPPER_STYLE}>
-        <h1>Default loading</h1>
-        <BarChart
-            projectId={fixtures.projectId}
-            measures={[fixtures.m_SumDayToClose]}
-            viewBy={[fixtures.a_Product]}
-            LoadingComponent={LoadingComponentExample}
+        <div style={WRAPPER_STYLE}>
+            <h1>Default loading</h1>
+            <BarChart
+                projectId={fixtures.projectId}
+                measures={[fixtures.m_SumDayToClose]}
+                viewBy={[fixtures.a_Product]}
+                LoadingComponent={LoadingComponentExample}
             />
-        <h1>Customize loading</h1>
-        <BarChart
-            projectId={fixtures.projectId}
-            measures={[fixtures.m_SnapshotBOP]}
-            viewBy={[fixtures.a_Product]}
-            LoadingComponent={CustomisedLoadingComponentExample}
+            <h1>Customize loading</h1>
+            <BarChart
+                projectId={fixtures.projectId}
+                measures={[fixtures.m_SnapshotBOP]}
+                viewBy={[fixtures.a_Product]}
+                LoadingComponent={CustomisedLoadingComponentExample}
             />
-        <h1>Error</h1>
-        <BarChart
-            projectId={fixtures.projectId}
-            measures={[fixtures.m_SnapshotBOP, fixtures.m_SnapshotBOP]}
-            viewBy={[fixtures.a_Product]}
-            ErrorComponent={ErrorComponentExample}
+            <h1>Error</h1>
+            <BarChart
+                projectId={fixtures.projectId}
+                measures={[fixtures.m_SnapshotBOP, fixtures.m_SnapshotBOP]}
+                viewBy={[fixtures.a_Product]}
+                ErrorComponent={ErrorComponentExample}
             />
-    </div>    
+        </div>
     ))
     .add('Responsive chart', () => (
-    <div>
-        <h1>Responsive chart</h1>
-        <p>Test on version below 7+: use component ResponsiveExampleOlders </p>
-        <p>Test on version higher 7+: use component ResponsiveExampleNewest </p>
-        <ResponsiveExampleNewest />
-    </div>    
+        <div>
+            <h1>Responsive chart</h1>
+            <p>Test on version below 7+: use component ResponsiveExampleOlders </p>
+            <p>Test on version higher 7+: use component ResponsiveExampleNewest </p>
+            <ResponsiveExampleNewest />
+        </div>
     ))
     .add('Filter', () => (
         <div style={WRAPPER_STYLE}>
-        <h1>A. Filter by identifier</h1>
-        <AttributeFilterIdentifierExample />
-        <h1>B. Filter by Uri</h1>
-        <AttributeFilterUriExample />
-        </div>    
+            <h1>A. Filter by identifier</h1>
+            <AttributeFilterIdentifierExample />
+            <h1>B. Filter by Uri</h1>
+            {/* <AttributeFilterUriExample /> */}
+        </div>
     ))
     .add('ParentFilter', () => (
         <div style={WRAPPER_STYLE}>
-        <ParentFilterExample />
-        </div>    
+            <ParentFilterExample />
+        </div>
     ));

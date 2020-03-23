@@ -148,20 +148,25 @@ const a_YearSnapshot = Model.attribute('snapshot.aag81lMifn6q').localIdentifier(
 const g_Latlon1 = Model.attribute(`/gdc/md/${projectId}/obj/77307`);
 
 //geo pushpin
-const g_Latlon = Model.attribute(`/gdc/md/${projectId}/obj/77094`);
-const a_Zip = Model.attribute(`/gdc/md/${projectId}/obj/77080`);
-const a_City = Model.attribute(`/gdc/md/${projectId}/obj/77082`);
-const a_State = Model.attribute(`/gdc/md/${projectId}/obj/77084`);
-const a_Timezone = Model.attribute(`/gdc/md/${projectId}/obj/77090`);
-const a_DST = Model.attribute(`/gdc/md/${projectId}/obj/77092`);
+const g_Latlon = Model.attribute(`/gdc/md/${projectId}/obj/77094`).alias('<button>LatLon</button>');
+const a_Zip = Model.attribute(`/gdc/md/${projectId}/obj/77080`).alias('Zip');
+const a_City = Model.attribute(`/gdc/md/${projectId}/obj/77082`).alias('City');
+const a_State = Model.attribute(`/gdc/md/${projectId}/obj/77084`).alias('State').localIdentifier('State');
+const a_Timezone = Model.attribute(`/gdc/md/${projectId}/obj/77090`).alias('Timezone');
+const a_DST = Model.attribute(`/gdc/md/${projectId}/obj/77092`).alias('DST');
 
-const m_SumPopulation = Model.measure(`/gdc/md/${projectId}/obj/77185`).localIdentifier('SumPopulation');
-const m_PopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77185`).ratio().localIdentifier('PopulationRatio')
-const m_MinPopulation = Model.measure(`/gdc/md/${projectId}/obj/77186`).localIdentifier('MinPopulation');
+const m_SumPopulation = Model.measure(`/gdc/md/${projectId}/obj/77185`).localIdentifier('SumPopulation').alias('Sum Population');
+const m_SumPopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77185`).ratio().localIdentifier('SumPopulationRatio').alias('Sum Population Ratio')
+const m_MinPopulation = Model.measure(`/gdc/md/${projectId}/obj/77186`).localIdentifier('MinPopulation').alias('Min Population');
+const m_MinPopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77186`).ratio().localIdentifier('MinPopulationRatio').alias('Min Population Ratio')
 const m_MaxPopulation = Model.measure(`/gdc/md/${projectId}/obj/77187`).localIdentifier('MaxPopulation');
 const m_SumLaBorPopulation = Model.measure(`/gdc/md/${projectId}/obj/77197`).localIdentifier('SumLaBorPopulation');
 const m_MinLaBorPopulation = Model.measure(`/gdc/md/${projectId}/obj/77198`).localIdentifier('MinLaBorPopulation');
-const m_Sum_SumPopulation_MinPopulation = Model.arithmeticMeasure(['SumPopulation', 'MinPopulation'], 'sum').alias('Sum_SumPopulation_MinPopulation');
+const m_Sum_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'sum').localIdentifier('AM_Sum_Population').alias('AM SUM Population');
+const m_Difference_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'difference').localIdentifier('AM_Difference_Population').alias('AM difference Population');;
+const m_Ratio_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'ratio').localIdentifier('AM_Ratio_Population').alias('AM ratio Population');
+const m_Change_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'change').localIdentifier('AM_Change_Population').alias('AM change Population');
+const m_Multiplication_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'multiplication').localIdentifier('AM_Multiplication_Population').alias('AM SUM Population');
 const m_POP_SumPopulation = Model.popMeasure('SumPopulation', `/gdc/md/${projectId}/obj/513`)
     .localIdentifier('POP_SumPopulation')
     .alias('POP SumPopulation');
@@ -171,6 +176,8 @@ const m_PP_SumPopulation = Model.previousPeriodMeasure('SumDayToClose', [{ dataS
 
 const filterCity = Model.positiveAttributeFilter(`/gdc/md/${projectId}/obj/77082`, [
     `/gdc/md/${projectId}/obj/77081/elements?id=475`,
+    `/gdc/md/${projectId}/obj/77081/elements?id=312`]);
+const filterCity1value = Model.positiveAttributeFilter(`/gdc/md/${projectId}/obj/77082`, [
     `/gdc/md/${projectId}/obj/77081/elements?id=312`]);
 const filterState = Model.positiveAttributeFilter('label.geopushpin.state', ["VI", "NY", "PR"], true);
 const filterTimezoneNegative = Model.negativeAttributeFilter('label.geopushpin.timezone', ["-4"], true);
@@ -366,7 +373,7 @@ const filterSumPopulation_LessThanOrEqualTo =
         }
     }
 };
-const filterMinPopulation_LessThanOrEqualTo =
+const filterMinPopulation_EqualTo =
 {
     measureValueFilter: {
         measure: {
@@ -374,8 +381,8 @@ const filterMinPopulation_LessThanOrEqualTo =
         },
         condition: {
             comparison: {
-                operator: "LESS_THAN_OR_EQUAL_TO",
-                value: -10
+                operator: "EQUAL_TO",
+                value: -10000
             }
         }
     }
@@ -763,13 +770,12 @@ export default {
     a_State,
     a_Timezone,
     filterSumPopulation_LessThanOrEqualTo,
-    filterMinPopulation_LessThanOrEqualTo,
+    filterMinPopulation_EqualTo,
     filterCity,
     filterSumPopulation_Between,
     filterSumPopulation_Equal,
     m_SumLaBorPopulation,
     m_MinLaBorPopulation,
-    m_Sum_SumPopulation_MinPopulation,
     filterTimezoneNegative,
     filterabsoluteYearSnapshot,
     filterrelativeYearSnapshot,
@@ -778,5 +784,12 @@ export default {
     g_Latlon1,
     m_POP_SumPopulation,
     m_PP_SumPopulation,
-    m_PopulationRatio
+    m_SumPopulationRatio,
+    m_MinPopulationRatio,
+    filterCity1value,
+    m_Sum_SumPopulation,
+    m_Difference_SumPopulation,
+    m_Ratio_SumPopulation,
+    m_Change_SumPopulation,
+    m_Multiplication_SumPopulation
 };

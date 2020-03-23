@@ -6,7 +6,7 @@ const URI = `https://${HOST}`;
 module.exports = function (app) {
     app.use(proxy("/gdc", {
         "changeOrigin": true,
-        "cookieDomainRewrite": "10.0.69.22",
+        "cookieDomainRewrite": "192.168.100.12", //"",// 192.168.1.63
         "secure": false,
         "target": URI,
         "headers": {
