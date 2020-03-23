@@ -6,7 +6,7 @@ const demoProject = {
     'https://staging2.intgdc.com': 'cxmrlinh0gcspntxsytkwcky7gkay4so', //d8qmrg8qi02th0pdyxi0jg7ekrv9beqh
     'https://staging.intgdc.com': 'uaumkml6k5h0ltatq2y5pjohhz3foylo' //egbqln7774to906vx4pfo6ear7w0ifr3
 };
-const backendUrl = "https://staging2.intgdc.com"; // eslint-disable-line no-undef
+const backendUrl = "https://staging3.intgdc.com"; // eslint-disable-line no-undef
 const demoProjectId = demoProject[backendUrl];
 if (!demoProjectId) {
     console.error(`[fixtures.js] ProjectId for backend "${backendUrl}" is not in `, demoProject); // eslint-disable-line no-console

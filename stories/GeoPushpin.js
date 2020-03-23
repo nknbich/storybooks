@@ -24,14 +24,6 @@ async function doExport() {
 storiesOf('Geo Pushpin', module)
     .add('Basic cases', () => (
         <div style={WRAPPER_STYLE}>
-        <h1>attribute on Location is non-geo attribute</h1>
-            <div style={{position: "relative", height: 600, border: "solid 2px black" }}>
-                <GeoPushpinChart
-                    projectId={fixtures.projectId}
-                    location={fixtures.a_StageName}
-                    config={{ mapboxToken: "pk.eyJ1IjoiaW1udXR6IiwiYSI6ImNrMHAxY2UxZzBnc2EzZG11YmVhd2dubG0ifQ.bUTN7ceAHq6kVooe3MKgqg" }}
-                />
-            </div> 
             <h1>attribute on Location is geo attribute</h1>
             <div style={{position: "relative", height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
@@ -178,7 +170,7 @@ storiesOf('Geo Pushpin', module)
     .add('Apply measure format', () => (
         <div style={WRAPPER_STYLE}>
             <h1>Ratio</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{ position: "relative",height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -189,7 +181,7 @@ storiesOf('Geo Pushpin', module)
                 />
             </div>
             <h1>Derive measure - POP</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{position: "relative", height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -201,7 +193,7 @@ storiesOf('Geo Pushpin', module)
                 />
             </div>
             <h1>Derive measure - PP</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{position: "relative", height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -217,7 +209,7 @@ storiesOf('Geo Pushpin', module)
     .add('Filter', () => (
         <div style={WRAPPER_STYLE}>
             <h1>Static filter inside measures - less than or = 50 </h1>
-            <div style={{ position: "relative", height: 600, border: "solid 2px black" }}>
+            <div style={{ position: "relative",position: "relative", height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -372,7 +364,7 @@ storiesOf('Geo Pushpin', module)
     .add('Drill', () => (
         <div style={WRAPPER_STYLE}>
             <h1>Drill into measure size/color</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{  position: "relative",height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -387,7 +379,7 @@ storiesOf('Geo Pushpin', module)
                 />
             </div>
             <h1>Drill into Location/Segment By</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{ position: "relative", height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -401,7 +393,7 @@ storiesOf('Geo Pushpin', module)
     .add('Export', () => (
         <div style={WRAPPER_STYLE}>
             <h1>Export geo pushpin to csv</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{ position: "relative", height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -414,7 +406,7 @@ storiesOf('Geo Pushpin', module)
                 <button onClick={doExport}>Export</button>
             </div>
             <h1>Export to xlsx</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{ position: "relative", height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -429,7 +421,7 @@ storiesOf('Geo Pushpin', module)
             </div>
             <h1>Export to xlsx</h1>
             <p>Missing 1 or more buckets</p>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{  position: "relative",height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -447,7 +439,7 @@ storiesOf('Geo Pushpin', module)
     .add('Element Masking', () => (
         <div style={WRAPPER_STYLE}>
             <h1>Element Masking</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{ position: "relative", height: 600, border: "solid 2px black" }}>
                 <GeoPushpinChart
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -462,7 +454,7 @@ storiesOf('Geo Pushpin', module)
     .add('Localization', () => (
         <div style={WRAPPER_STYLE}>
             <h1>Localization: fr-FR</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
+            <div style={{ position: "relative", height: 600, border: "solid 2px black" }}>
                 <Visualization
                     projectId={fixtures.projectId}
                     location={fixtures.g_Latlon}
@@ -535,7 +527,6 @@ storiesOf('Geo Pushpin', module)
                     projectId={fixtures.projectId}
                     identifier="aaerv5m0iy8m"
                     config={{ mapboxToken: "pk.eyJ1IjoiaW1udXR6IiwiYSI6ImNrMHAxY2UxZzBnc2EzZG11YmVhd2dubG0ifQ.bUTN7ceAHq6kVooe3MKgqg" }}
-                    filters={[fixtures.filterCity]}
                 />
             </div>
             <h1>Location + size + color + segment</h1>
@@ -544,16 +535,8 @@ storiesOf('Geo Pushpin', module)
                     projectId={fixtures.projectId}
                     identifier="aaryAqK6hpES"
                     config={{
-                        separators: {
-                            thousand: ' ',
-                            decimal: ':'
-                        },
-                        chart: {
-                            verticalAlign: 'bottom'  //top, middle
-                        },
                         mapboxToken: "pk.eyJ1IjoiaW1udXR6IiwiYSI6ImNrMHAxY2UxZzBnc2EzZG11YmVhd2dubG0ifQ.bUTN7ceAHq6kVooe3MKgqg"
                     }}
-
                 />
             </div>
             <h1>Filter inside measure</h1>
@@ -644,21 +627,6 @@ storiesOf('Geo Pushpin', module)
 
                 />
                 <button onClick={doExport}>Export</button>
-            </div>
-        </div>
-    ))
-    .add('Base', () => (
-        <div style={WRAPPER_STYLE}>
-            <h1>Base</h1>
-            <div style={{ height: 600, border: "solid 2px black" }}>
-                <GeoPushpinChart
-                    projectId={fixtures.projectId}
-                    location={fixtures.g_Latlon}
-                    size={fixtures.m_SumPopulation}
-                    color={fixtures.m_MinPopulation}
-                    segmentBy={fixtures.a_State}
-                    config={{ mapboxToken: "pk.eyJ1IjoiaW1udXR6IiwiYSI6ImNrMHAxY2UxZzBnc2EzZG11YmVhd2dubG0ifQ.bUTN7ceAHq6kVooe3MKgqg" }}
-                />
             </div>
         </div>
     ))
@@ -819,11 +787,5 @@ storiesOf('Geo Pushpin', module)
                 />
                 <button style={{ position: "relative", padding: "15px 32px" }} onClick={doExport}>Export</button>
             </div>
-            <ColumnChart
-            projectId={fixtures.projectId}
-            measures={[fixtures.m_PopulationRatio,fixtures.m_PopulationRatio]}
-            viewBy={[fixtures.g_Latlon]}
-            filters={[fixtures.filterCity]}
-        />
         </div>
     ))

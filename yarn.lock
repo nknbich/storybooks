@@ -1239,10 +1239,10 @@
   resolved "https://registry.yarnpkg.com/@gooddata/numberjs/-/numberjs-3.2.4.tgz#4363751f4a589e9d3f12d185b38b954183dc1c48"
   integrity sha512-v4JO9dIQ9PIJCxjiBkUNCSa40tHGShFsSYBo6B+YuMxpZpslLClvC1tcXRuk7tc9OsCAorcKzcEgtHQTLPtH2A==
 
-"@gooddata/react-components@7.4.0-rc.4":
-  version "7.4.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@gooddata/react-components/-/react-components-7.4.0-rc.4.tgz#6fc1ae033ad3d117bd4262bf0ce3159c3a93d1bf"
-  integrity sha512-QEbtJmxcNbbeXVCbw4KgFPonLvYU6vN56BS0SmDiLvWrQfT0qcyy4cx+li4AlFp4I/r4WwKjESzt9niEsAez5Q==
+"@gooddata/react-components@7.5.0-beta.23":
+  version "7.5.0-beta.23"
+  resolved "https://registry.yarnpkg.com/@gooddata/react-components/-/react-components-7.5.0-beta.23.tgz#2712badbe2cf24f6436ce5ea981a99080d45b142"
+  integrity sha512-0uw2u1dlqzqr7tUZlg9TWD8mfmG7bYPE8UyO9EAIZg34pQ8fqZ6AyYcshtOp7MF8+LAiiGaeZwta5hwLXRVO+A==
   dependencies:
     "@formatjs/intl-pluralrules" "^1.3.6"
     "@gooddata/gooddata-js" "^12.5.0"
