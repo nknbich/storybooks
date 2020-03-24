@@ -6,7 +6,7 @@ const demoProject = {
     'https://staging2.intgdc.com': 'cxmrlinh0gcspntxsytkwcky7gkay4so', //d8qmrg8qi02th0pdyxi0jg7ekrv9beqh
     'https://staging.intgdc.com': 'uaumkml6k5h0ltatq2y5pjohhz3foylo' //egbqln7774to906vx4pfo6ear7w0ifr3
 };
-const backendUrl = "https://staging3.intgdc.com"; // eslint-disable-line no-undef
+const backendUrl = "https://staging2.intgdc.com"; // eslint-disable-line no-undef
 const demoProjectId = demoProject[backendUrl];
 if (!demoProjectId) {
     console.error(`[fixtures.js] ProjectId for backend "${backendUrl}" is not in `, demoProject); // eslint-disable-line no-console
@@ -156,6 +156,10 @@ const a_Timezone = Model.attribute(`/gdc/md/${projectId}/obj/77090`).alias('Time
 const a_DST = Model.attribute(`/gdc/md/${projectId}/obj/77092`).alias('DST');
 
 const m_SumPopulation = Model.measure(`/gdc/md/${projectId}/obj/77185`).localIdentifier('SumPopulation').alias('Sum Population');
+const m_SumPopulationFormat = Model.measure(`/gdc/md/${projectId}/obj/77185`)
+        .localIdentifier('SumPopulationFormat')
+        .format('[>=60000000][color=2190c0]█████ #,##0; [>=170000][color=2190c0]████░ #,##0; [>=600][color=2190c0]███░░ #,##0; [>=500][color=2190c0]██░░░ #,##0; [>=0][color=2190c0]█░░░░ #,##0; [=Null] No data;')
+        .alias('Sum Population Format');
 const m_SumPopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77185`).ratio().localIdentifier('SumPopulationRatio').alias('Sum Population Ratio')
 const m_MinPopulation = Model.measure(`/gdc/md/${projectId}/obj/77186`).localIdentifier('MinPopulation').alias('Min Population');
 const m_MinPopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77186`).ratio().localIdentifier('MinPopulationRatio').alias('Min Population Ratio')
@@ -762,6 +766,7 @@ export default {
     s_sortByYearClosedSumClosedBOP,
     g_Latlon,
     m_SumPopulation,
+    m_SumPopulationFormat,
     m_MinPopulation,
     m_MaxPopulation,
     a_City,
