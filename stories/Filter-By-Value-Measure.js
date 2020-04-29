@@ -43,7 +43,7 @@ storiesOf('Filter by value measure', module)
             columns={[fixtures.a_Product]}
             filters={[fixtures.filterAmountRatio_GreaterThan]}
          />
-         <h1>AM - Filter positive attribute + absolute date, Change_ClosedBOP_SnapshotBOP = -100%
+         <h1>(ATT) AM - Filter positive attribute + absolute date, Change_ClosedBOP_SnapshotBOP = -100%
          </h1>
          <PivotTable
             projectId={fixtures.projectId}
@@ -52,7 +52,7 @@ storiesOf('Filter by value measure', module)
             columns={[fixtures.a_YearSnapshot]}
             filters={[fixtures.filterChange_EqualTo, fixtures.filterStageNameInterest, fixtures.absoluteYearSnapshot]}
          />
-         <h1>PP, SLPY - Combine all filters, m_POP_SumDayToClose between 20000 and 100000</h1>
+         <h1>(ATT) PP, SLPY - Combine all filters, m_POP_SumDayToClose between 20000 and 100000</h1>
          <PivotTable
             projectId={fixtures.projectId}
             measures={[fixtures.m_SumDayToClose, fixtures.m_POP_SumDayToClose]}
@@ -335,7 +335,7 @@ storiesOf('Filter by value measure', module)
             onFiredDrillEvent={(data) => { console.log(data.executionContext); console.log(data.drillContext); }}
             onExportReady={onExportReady}
          />
-         <h1>AM - Filter positive attribute + absolute date, Change_ClosedBOP_SnapshotBOP = -100%
+         <h1>AM - Filter positive attribute, Change_ClosedBOP_SnapshotBOP = -100%
             stack to %
          </h1>
          <Heatmap
@@ -486,7 +486,7 @@ storiesOf('Filter by value measure', module)
    .add('Visualization ', () => (
       <div style={WRAPPER_STYLE}>
          <h1>Normal measure, Ad-hoc Fact, Ad-hoc Attribute</h1>
-         <h1>Date Filter, Min Amount > -400000</h1>
+         <h1>ATT-Date Filter, Min Amount > -400000</h1>
          <Visualization
             projectId={fixtures.projectId}
             identifier="aagWYcrFdD5S"

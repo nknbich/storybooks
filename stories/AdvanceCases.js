@@ -877,9 +877,9 @@ storiesOf('Advance cases', module)
     ))
     .add('Filter', () => (
         <div style={WRAPPER_STYLE}>
-            <h1>A. Filter by identifier</h1>
+            <h1>ATT-A. Filter by identifier</h1>
             <AttributeFilterIdentifierExample />
-            <h1>B. Filter by Uri</h1>
+            <h1>ATT-B. Filter by Uri</h1>
             {/* <AttributeFilterUriExample /> */}
         </div>
     ))

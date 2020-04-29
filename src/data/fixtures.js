@@ -6,7 +6,7 @@ const demoProject = {
     'https://staging2.intgdc.com': 'cxmrlinh0gcspntxsytkwcky7gkay4so', //d8qmrg8qi02th0pdyxi0jg7ekrv9beqh
     'https://staging.intgdc.com': 'uaumkml6k5h0ltatq2y5pjohhz3foylo' //egbqln7774to906vx4pfo6ear7w0ifr3
 };
-const backendUrl = "https://staging2.intgdc.com"; // eslint-disable-line no-undef
+const backendUrl = "https://staging3.intgdc.com"; // eslint-disable-line no-undef
 const demoProjectId = demoProject[backendUrl];
 if (!demoProjectId) {
     console.error(`[fixtures.js] ProjectId for backend "${backendUrl}" is not in `, demoProject); // eslint-disable-line no-console
@@ -75,7 +75,7 @@ const m_POP_SumDayToClose = Model.popMeasure('SumDayToClose', `/gdc/md/${project
 
 const m_PP_SumDayToClose = Model.previousPeriodMeasure('SumDayToClose', [{ dataSet: `/gdc/md/${projectId}/obj/330`, periodsAgo: 1 }])
     .localIdentifier('PP_SumDayToClose')
-    .alias('PP SumDayToClose');
+    .alias('PP SumDayToClose');   
 
 //M1: _Closed [BOP], M2: _Snapshot [BOP]
 const m_Sum_ClosedBOP_SnapshotBOP = Model.arithmeticMeasure(['ClosedBOP', 'SnapshotBOP'], 'sum');
@@ -110,6 +110,8 @@ const m_CountStageHistoryRatio = Model.measure(`/gdc/md/${projectId}/obj/1174`)
     .ratio()
     .localIdentifier('CountStageHistoryWithRatio');
 const m_Amount = Model.measure(`/gdc/md/${projectId}/obj/1279`).localIdentifier('Amount');
+const m_Amount1 = Model.measure(`/gdc/md/${projectId}/obj/1279`).localIdentifier('Amount1');
+const m_Amount2 = Model.measure(`/gdc/md/${projectId}/obj/1279`).localIdentifier('Amount2');
 const m_AmountDuplicate = Model.measure(`/gdc/md/${projectId}/obj/1279`).localIdentifier('AmountDuplicate');
 const m_ClosedEOP = Model.measure(`/gdc/md/${projectId}/obj/9203`).localIdentifier('ClosedEOP');
 const m_ClosedBOP = Model.measure(`/gdc/md/${projectId}/obj/9211`).localIdentifier('ClosedBOP');
@@ -129,12 +131,20 @@ const m_AmountBOP = Model.measure(`/gdc/md/${projectId}/obj/2858`).localIdentifi
 const m_AvgAmount = Model.measure(`/gdc/md/${projectId}/obj/62827`);
 const m_AvgWon = Model.measure(`/gdc/md/${projectId}/obj/1281`);
 
+const m_POP_Amount = Model.popMeasure('Amount', `/gdc/md/${projectId}/obj/513`)
+    .localIdentifier('POP_SumAmount')
+    .alias('POP Amount');
+const m_PP_Amount = Model.previousPeriodMeasure('Amount', [{ dataSet: `/gdc/md/${projectId}/obj/520`, periodsAgo: 1 }])
+    .localIdentifier('PP_SumAmount')
+    .alias('PP Amount'); 
+    
 const a_Account = Model.attribute(`label.account.id.name`).localIdentifier('Account');
 //or const a_Account = Model.attribute(`/gdc/md/${projectId}/obj/970`);
 const a_Activity = Model.attribute(`label.activity.id.subject`).localIdentifier('Activity');
 //or const a_Activity = Model.attribute(`/gdc/md/${projectId}/obj/1254`);
 const a_Product = Model.attribute('label.product.id.name').localIdentifier('ProductName');
 //const CompuSci = Model.attribute([`/gdc/md/${projectId}/obj/949/elements?id=168279`]);
+//protected attribute: StageName
 const a_StageName = Model.attribute('label.stage.name.stagename').localIdentifier('StageName');
 const a_Department = Model.attribute('label.owner.department').localIdentifier('Department');
 const a_FirstName = Model.attribute('label.persons.firstname').localIdentifier('Firstname');
@@ -143,6 +153,7 @@ const a_Address = Model.attribute('label.persons.address').localIdentifier('Addr
 const a_StartFrom = Model.attribute('startfrom.aag81lMifn6q').localIdentifier('YearStartFrom');
 const a_YearClosed = Model.attribute('closed.aag81lMifn6q').localIdentifier('YearClosed');
 const a_YearSnapshot = Model.attribute('snapshot.aag81lMifn6q').localIdentifier('YearSnapshot');
+const a_OppSnapshot = Model.attribute('label.opportunitysnapshot.id').localIdentifier('OppSnapshot');
 
 //geo pushpin too large
 const g_Latlon1 = Model.attribute(`/gdc/md/${projectId}/obj/77307`);
@@ -155,28 +166,29 @@ const a_State = Model.attribute(`/gdc/md/${projectId}/obj/77084`).alias('State')
 const a_Timezone = Model.attribute(`/gdc/md/${projectId}/obj/77090`).alias('Timezone');
 const a_DST = Model.attribute(`/gdc/md/${projectId}/obj/77092`).alias('DST');
 
-const m_SumPopulation = Model.measure(`/gdc/md/${projectId}/obj/77185`).localIdentifier('SumPopulation').alias('Sum Population');
-const m_SumPopulationFormat = Model.measure(`/gdc/md/${projectId}/obj/77185`)
-        .localIdentifier('SumPopulationFormat')
-        .format('[>=60000000][color=2190c0]█████ #,##0; [>=170000][color=2190c0]████░ #,##0; [>=600][color=2190c0]███░░ #,##0; [>=500][color=2190c0]██░░░ #,##0; [>=0][color=2190c0]█░░░░ #,##0; [=Null] No data;')
-        .alias('Sum Population Format');
-const m_SumPopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77185`).ratio().localIdentifier('SumPopulationRatio').alias('Sum Population Ratio')
+const m_SumPopulation = Model.measure(`/gdc/md/${projectId}/obj/77185`).localIdentifier('SumPopulation').alias('Population[Sum]');
+const m_SumPopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77185`).ratio().localIdentifier('SumPopulationRatio').alias('SumPopulation Ratio')
 const m_MinPopulation = Model.measure(`/gdc/md/${projectId}/obj/77186`).localIdentifier('MinPopulation').alias('Min Population');
-const m_MinPopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77186`).ratio().localIdentifier('MinPopulationRatio').alias('Min Population Ratio')
+const m_MinPopulationRatio = Model.measure(`/gdc/md/${projectId}/obj/77186`).ratio().localIdentifier('MinPopulationRatio').alias('MinPopulation Ratio')
 const m_MaxPopulation = Model.measure(`/gdc/md/${projectId}/obj/77187`).localIdentifier('MaxPopulation');
 const m_SumLaBorPopulation = Model.measure(`/gdc/md/${projectId}/obj/77197`).localIdentifier('SumLaBorPopulation');
 const m_MinLaBorPopulation = Model.measure(`/gdc/md/${projectId}/obj/77198`).localIdentifier('MinLaBorPopulation');
-const m_Sum_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'sum').localIdentifier('AM_Sum_Population').alias('AM SUM Population');
+const m_Sum_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'sum').localIdentifier('AM_Sum_Population');
 const m_Difference_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'difference').localIdentifier('AM_Difference_Population').alias('AM difference Population');;
 const m_Ratio_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'ratio').localIdentifier('AM_Ratio_Population').alias('AM ratio Population');
 const m_Change_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'change').localIdentifier('AM_Change_Population').alias('AM change Population');
-const m_Multiplication_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'multiplication').localIdentifier('AM_Multiplication_Population').alias('AM SUM Population');
+const m_Multiplication_SumPopulation = Model.arithmeticMeasure(['SumPopulation', 'SumPopulation'], 'multiplication').localIdentifier('AM_Multiplication_Population').alias('AM Multiplication Population');
 const m_POP_SumPopulation = Model.popMeasure('SumPopulation', `/gdc/md/${projectId}/obj/513`)
     .localIdentifier('POP_SumPopulation')
-    .alias('POP SumPopulation');
+    .alias('POP Population');
 const m_PP_SumPopulation = Model.previousPeriodMeasure('SumDayToClose', [{ dataSet: `/gdc/md/${projectId}/obj/520`, periodsAgo: 1 }])
     .localIdentifier('PP_SumPopulation')
-    .alias('PP SumPopulation');
+    .alias('PP Population');
+
+
+const m_derive_AM_Population = Model.popMeasure('AM_Sum_Population', `/gdc/md/${projectId}/obj/513`)
+    .localIdentifier('POP_AM_Population')
+    .alias('derive AM Population');
 
 const filterCity = Model.positiveAttributeFilter(`/gdc/md/${projectId}/obj/77082`, [
     `/gdc/md/${projectId}/obj/77081/elements?id=475`,
@@ -766,7 +778,6 @@ export default {
     s_sortByYearClosedSumClosedBOP,
     g_Latlon,
     m_SumPopulation,
-    m_SumPopulationFormat,
     m_MinPopulation,
     m_MaxPopulation,
     a_City,
@@ -796,5 +807,11 @@ export default {
     m_Difference_SumPopulation,
     m_Ratio_SumPopulation,
     m_Change_SumPopulation,
-    m_Multiplication_SumPopulation
+    m_Multiplication_SumPopulation,
+    a_OppSnapshot,
+    m_PP_Amount,
+    m_POP_Amount,
+    m_Amount1,
+    m_Amount2,
+    m_derive_AM_Population
 };

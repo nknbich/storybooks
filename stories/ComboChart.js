@@ -2,7 +2,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import '@gooddata/react-components/styles/css/main.css';
-import { Visualization, ComboChart, HeaderPredicateFactory } from '@gooddata/react-components';
+import { ComboChart, HeaderPredicateFactory } from '@gooddata/react-components';
 
 const WRAPPER_STYLE = { width: 800, height: 400 };
 const DOWNLOADER_ID = 'downloader';

@@ -10,35 +10,25 @@ const WRAPPER_STYLE = { width: 1000, height: 500 };
 storiesOf('Other Charts', module)
     .add('Headline', () => (
     <div style={WRAPPER_STYLE}>
-        <h1>Headline only primary measure</h1>
+        <h1>(ATT)Headline only primary measure</h1>
         <Headline
             projectId={fixtures.projectId}
             primaryMeasure={fixtures.m_ClosedBOP}
             //secondaryMeasure={[fixtures.m_ClosedEOP]}
         />
-        <h1>Headline only secondary Measure</h1>
+        <h1>(ATT)Headline only secondary Measure</h1>
         <Headline
             projectId={fixtures.projectId}
             //primaryMeasure={[fixtures.m_ClosedBOP]}
             secondaryMeasure={fixtures.m_ClosedEOP}
         />
-        <h1>Headline 2 measures</h1>
+        <h1>(ATT)Headline 2 measures</h1>
         <Headline
             projectId={fixtures.projectId}
             primaryMeasure={fixtures.m_ClosedBOP}
             secondaryMeasure={fixtures.m_ClosedEOP}
         />
-<h1>check area </h1>
-        <AreaChart
-            projectId={fixtures.projectId}
-            measures={[fixtures.m_ClosedBOP, fixtures.m_Amount]}
-            //rows={[fixtures.a_Product]}
-            viewBy={fixtures.a_Product}
-            
-            sortBy={[fixtures.s_sortbyProductTotal]}
-        />
-    </div>
-        
+        </div>
     ))
     .add('Scatter Plot', () => (
     <div style={WRAPPER_STYLE}>
@@ -226,7 +216,7 @@ storiesOf('Other Charts', module)
     ))
     .add('Treemap Chart', () => (
     <div style={WRAPPER_STYLE}>
-        <h1>Treemap chart 1M,1VB,1SB</h1>
+        <h1>ATT-Treemap chart 1M,1VB,1SB</h1>
         <Treemap
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
@@ -241,7 +231,7 @@ storiesOf('Other Charts', module)
                 }
             }}
         />
-        <h1>Treemap chart 1M,1VB</h1>
+        <h1>ATT-Treemap chart 1M,1VB</h1>
         <Treemap
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
@@ -256,7 +246,7 @@ storiesOf('Other Charts', module)
                 }
             }}
         />
-        <h1>Treemap chart 1M,1SB</h1>
+        <h1>ATT-Treemap chart 1M,1SB</h1>
         <Treemap
             projectId={fixtures.projectId}
             measures={[fixtures.m_ClosedBOP]}
